@@ -33,18 +33,18 @@ public class SlotGameGUI {
 	    private JButton btnCash, btnSpin;
 	    private JCheckBox cbAlwaysWin, cbSuperJackpot, cbTrollface;
 	    private JFrame frmFrame;
-	    private JLabel lblCredits, lblLost, lblMatchThree, lblMatchTwo, lblMoney, lblReel1, lblReel2, lblReel3, lblStatus, lblWon;
-	    private JPanel pnlReels, pnlReel1, pnlReel2, pnlReel3;
+	    private JLabel lblCredits, lblLost, lblMatchThree, lblMatchTwo, lblMoney, lblReel1, lblReel2, lblReel3, lblReel4, lblReel5, lblReel6, lblReel7, lblReel8, lblReel9, lblStatus, lblWon;
+	    private JPanel pnlReels, pnlReel1, pnlReel2, pnlReel3, pnlReel4, pnlReel5, pnlReel6, pnlReel7, pnlReel8, pnlReel9;
 	    private JProgressBar prgbarCheatUnlocker;
 	    private JSeparator sepCheats, sepStats, sepStats2, sepStatus;
 	    private JToggleButton tgglSound;
 	    private int credits = 100, boughtCredits = 100, bet = 15, matchThree, matchTwo, win, lost;
 	    private double payout = 25.0, creditBuyout = 10.0, funds;
-	    private int reel1 = 7, reel2 = 7, reel3 = 7; // starting values of the reels.
+	    private int reel1 = 1, reel2 = 2, reel3 = 3, reel4 = 4, reel5 = 5, reel6 = 6, reel7 = 7, reel8 = 8, reel9 = 9; // starting values of the reels.
 	    private ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
 	    private DecimalFormat df = new DecimalFormat("0.00");
 	     
-	    public SlotGameGUI(int credits, int boughtCredits, int bet, double payout, double creditBuyout, int reel1, int reel2, int reel3) {
+	    public SlotGameGUI(int credits, int boughtCredits, int bet, double payout, double creditBuyout, int reel1, int reel2, int reel3,int reel4, int reel5, int reel6,int reel7, int reel8, int reel9) {
 	        this.credits=credits;
 	        this.boughtCredits=boughtCredits;
 	        this.bet=bet;
@@ -53,6 +53,12 @@ public class SlotGameGUI {
 	        this.reel1=reel1;
 	        this.reel2=reel2;
 	        this.reel3=reel3;
+	        this.reel4=reel4;
+	        this.reel5=reel5;
+	        this.reel6=reel6;
+	        this.reel7=reel7;
+	        this.reel8=reel8;
+	        this.reel9=reel9;
 	        createForm();
 	        loadImages();
 	        addFields();
@@ -83,7 +89,8 @@ public class SlotGameGUI {
 	         
 	        pnlReels = new JPanel();
 	        pnlReels.setBorder(BorderFactory.createEtchedBorder());
-	         
+	        
+	         // first row
 	        pnlReel1 = new JPanel();
 	        pnlReel1.setBackground(new Color(255, 215, 0));
 	        pnlReel1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
@@ -93,6 +100,28 @@ public class SlotGameGUI {
 	        pnlReel3 = new JPanel();
 	        pnlReel3.setBackground(new java.awt.Color(255, 215, 0));
 	        pnlReel3.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        
+	        // Second Row
+	        pnlReel4 = new JPanel();
+	        pnlReel4.setBackground(new Color(255, 215, 0));
+	        pnlReel4.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        pnlReel5 = new JPanel();
+	        pnlReel5.setBackground(new Color(255, 216, 0));
+	        pnlReel5.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        pnlReel6 = new JPanel();
+	        pnlReel6.setBackground(new java.awt.Color(255, 215, 0));
+	        pnlReel6.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        
+	        // third row
+	        pnlReel7 = new JPanel();
+	        pnlReel7.setBackground(new Color(255, 215, 0));
+	        pnlReel7.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        pnlReel8 = new JPanel();
+	        pnlReel8.setBackground(new Color(255, 216, 0));
+	        pnlReel8.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
+	        pnlReel9 = new JPanel();
+	        pnlReel9.setBackground(new java.awt.Color(255, 215, 0));
+	        pnlReel9.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
 	         
 	    }
 	     
@@ -102,6 +131,12 @@ public class SlotGameGUI {
 	        lblReel1 = new JLabel();
 	        lblReel2 = new JLabel();
 	        lblReel3 = new JLabel();
+	        lblReel4 = new JLabel();
+	        lblReel5 = new JLabel();
+	        lblReel6 = new JLabel();
+	        lblReel7 = new JLabel();
+	        lblReel8 = new JLabel();
+	        lblReel9 = new JLabel();
 	         
 	        sepStats = new JSeparator();
 	        lblMatchTwo = new JLabel();
@@ -125,7 +160,7 @@ public class SlotGameGUI {
 	        lblStatus.setBackground(new Color(255, 255, 255));
 	        lblStatus.setFont(new Font("Arial", 1, 14));
 	        lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
-	        lblStatus.setText("Welcome to Casnio Innovatique!!! ©2018");
+	        lblStatus.setText("Welcome to Casnio InnovatiQ!!! ©2018");
 	         
 	        sepCheats = new JSeparator();
 	        prgbarCheatUnlocker = new JProgressBar();
@@ -134,6 +169,12 @@ public class SlotGameGUI {
 	        lblReel1.setIcon(images.get(reel1));
 	        lblReel2.setIcon(images.get(reel2));
 	        lblReel3.setIcon(images.get(reel3));
+	        lblReel4.setIcon(images.get(reel4));
+	        lblReel5.setIcon(images.get(reel5));
+	        lblReel6.setIcon(images.get(reel6));
+	        lblReel7.setIcon(images.get(reel7));
+	        lblReel8.setIcon(images.get(reel8));
+	        lblReel9.setIcon(images.get(reel9));
 	         
 	    }
 	     
@@ -186,11 +227,11 @@ public class SlotGameGUI {
 	        frmFrame.getContentPane().setLayout(frameLayout);
 	        frameLayout.setHorizontalGroup(
 	        frameLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        .addGap(0, 400, Short.MAX_VALUE)
+	        .addGap(0, 600, Short.MAX_VALUE)
 	        );
 	        frameLayout.setVerticalGroup(
 	        frameLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	        .addGap(0, 300, Short.MAX_VALUE)
+	        .addGap(0, 500, Short.MAX_VALUE)
 	        );
 	    }
 	     
@@ -220,7 +261,54 @@ public class SlotGameGUI {
 	        .addComponent(pnlReel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 	        );
-	         
+	        
+	        // Second row
+    		pnlReelsLayout.setHorizontalGroup(
+	        pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReelsLayout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(pnlReel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addGap(18, 18, 18)
+	        .addComponent(pnlReel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addGap(18, 18, 18)
+	        .addComponent(pnlReel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReelsLayout.setVerticalGroup(
+	        pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReelsLayout.createSequentialGroup()
+	        .addContainerGap()
+	        .addGroup(pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+	        .addComponent(pnlReel4, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	        .addComponent(pnlReel5, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	        .addComponent(pnlReel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	    	        
+	        // Third row
+			pnlReelsLayout.setHorizontalGroup(
+	        pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReelsLayout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(pnlReel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addGap(18, 18, 18)
+	        .addComponent(pnlReel8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addGap(18, 18, 18)
+	        .addComponent(pnlReel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReelsLayout.setVerticalGroup(
+	        pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReelsLayout.createSequentialGroup()
+	        .addContainerGap()
+	        .addGroup(pnlReelsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+	        .addComponent(pnlReel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	        .addComponent(pnlReel8, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	        .addComponent(pnlReel9, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        
+	        // For First row
 	        GroupLayout pnlReel1Layout = new GroupLayout(pnlReel1);
 	        pnlReel1.setLayout(pnlReel1Layout);
 	        pnlReel1Layout.setHorizontalGroup(
@@ -269,6 +357,110 @@ public class SlotGameGUI {
 	        .addGroup(pnlReel3Layout.createSequentialGroup()
 	        .addContainerGap()
 	        .addComponent(lblReel3)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        
+	        //For Second Row
+	        GroupLayout pnlReel4Layout = new GroupLayout(pnlReel4);
+	        pnlReel4.setLayout(pnlReel4Layout);
+	        pnlReel4Layout.setHorizontalGroup(
+	        pnlReel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel4Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel4)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel4Layout.setVerticalGroup(
+	        pnlReel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel4Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel4)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	         
+	        GroupLayout pnlReel5Layout = new GroupLayout(pnlReel5);
+	        pnlReel5.setLayout(pnlReel5Layout);
+	        pnlReel5Layout.setHorizontalGroup(
+	        pnlReel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel5Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel5)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel5Layout.setVerticalGroup(
+	        pnlReel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel5Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel5)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	         
+	        GroupLayout pnlReel6Layout = new GroupLayout(pnlReel6);
+	        pnlReel6.setLayout(pnlReel6Layout);
+	        pnlReel6Layout.setHorizontalGroup(
+	        pnlReel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel6Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel6)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel6Layout.setVerticalGroup(
+	        pnlReel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel6Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel6)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        
+	        // For Third row
+	        GroupLayout pnlReel7Layout = new GroupLayout(pnlReel7);
+	        pnlReel7.setLayout(pnlReel7Layout);
+	        pnlReel7Layout.setHorizontalGroup(
+	        pnlReel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel7Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel7)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel7Layout.setVerticalGroup(
+	        pnlReel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel1Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel7)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	         
+	        GroupLayout pnlReel8Layout = new GroupLayout(pnlReel8);
+	        pnlReel8.setLayout(pnlReel8Layout);
+	        pnlReel8Layout.setHorizontalGroup(
+	        pnlReel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel8Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel8)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel8Layout.setVerticalGroup(
+	        pnlReel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel8Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel8)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	         
+	        GroupLayout pnlReel9Layout = new GroupLayout(pnlReel9);
+	        pnlReel9.setLayout(pnlReel9Layout);
+	        pnlReel9Layout.setHorizontalGroup(
+	        pnlReel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel9Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel9)
+	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	        );
+	        pnlReel9Layout.setVerticalGroup(
+	        pnlReel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	        .addGroup(pnlReel9Layout.createSequentialGroup()
+	        .addContainerGap()
+	        .addComponent(lblReel9)
 	        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 	        );
 	         
@@ -404,7 +596,7 @@ public class SlotGameGUI {
 	    class SpinHandler implements ActionListener {
 	        public void actionPerformed(ActionEvent event) {
 	            if (funds < creditBuyout && credits < bet) {
-	                lblStatus.setText("<html><a href='http://www.gambleaware.co.uk/'>www.gambleaware.co.uk</a></html>");
+	                lblStatus.setText("<html><a href='http://www.innovatiqtechnology.com/'>InnovatiQ</a></html>");
 	                } else if ((credits - bet) >= 0) {
 	                pnlReel1.setBackground(new java.awt.Color(255, 215, 0));
 	                pnlReel2.setBackground(new java.awt.Color(255, 215, 0));
@@ -590,6 +782,7 @@ public class SlotGameGUI {
 	        images.add(createImageIcon("/images/Plum.png", "Plum"));
 	        images.add(createImageIcon("/images/Seven.png", "Seven"));
 	        images.add(createImageIcon("/images/Watermelon.png", "Watermelon"));
+	        images.add(createImageIcon("/images/Coin.png", "Coin"));
 	    }
 	     
 	    /** Create a new ImageIcon, unless the URL is not found. */
