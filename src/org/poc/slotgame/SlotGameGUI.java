@@ -77,7 +77,7 @@ public class SlotGameGUI {
 	         
 	        frmFrame = new JFrame();
 	        frmFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	        frmFrame.setTitle("Warner Slots");
+	        frmFrame.setTitle("Welcome To Casino");
 	        frmFrame.setResizable(false);
 	        frmFrame.setVisible(true);
 	         
@@ -116,7 +116,7 @@ public class SlotGameGUI {
 	        lblCredits = new JLabel();
 	        lblCredits.setText("Credits: "+credits);
 	        lblMoney = new JLabel();
-	        lblMoney.setText("Money: £"+df.format(funds));
+	        lblMoney.setText("Money: $"+df.format(funds));
 	        lblLost = new JLabel();
 	        lblLost.setText("Lost: ");
 	         
@@ -125,7 +125,7 @@ public class SlotGameGUI {
 	        lblStatus.setBackground(new Color(255, 255, 255));
 	        lblStatus.setFont(new Font("Arial", 1, 14));
 	        lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
-	        lblStatus.setText("Welcome to WARNER SLOTS!!! ©2012");
+	        lblStatus.setText("Welcome to Casnio Innovatique!!! ©2018");
 	         
 	        sepCheats = new JSeparator();
 	        prgbarCheatUnlocker = new JProgressBar();
@@ -153,7 +153,7 @@ public class SlotGameGUI {
 	        btnCash = new JButton();
 	        btnCash.setBackground(new Color(255, 0, 0));
 	        btnCash.setText("Buy Credits");
-	        btnCash.setToolTipText("£"+df.format(bet)+" converts to "+boughtCredits+" credits.");
+	        btnCash.setToolTipText("$"+df.format(bet)+" converts to "+boughtCredits+" credits.");
 	        btnCash.setHorizontalTextPosition(SwingConstants.CENTER);
 	        btnCash.addActionListener(new BuyCreditsHandler());
 	         
@@ -381,12 +381,12 @@ public class SlotGameGUI {
 	    public void buyCredits() {
 	        if (funds >= creditBuyout) {
 	            funds -= creditBuyout;
-	            lblMoney.setText("Money: £"+df.format(funds));
+	            lblMoney.setText("Money: $"+df.format(funds));
 	            credits += boughtCredits;
 	            lblCredits.setText("Credits: "+credits);
-	            lblStatus.setText("+"+boughtCredits+" credits purchased! -£"+df.format(creditBuyout));
+	            lblStatus.setText("+"+boughtCredits+" credits purchased! -$"+df.format(creditBuyout));
 	            } else {
-	            lblStatus.setText("Insufficient £ to purchase credits!");
+	            lblStatus.setText("Insufficient $ to purchase credits!");
 	        }
 	        buyCreditsCheck();
 	    }
@@ -412,7 +412,7 @@ public class SlotGameGUI {
 	                genReelNumbers();
 	                matchCheck();
 	                } else {
-	                lblStatus.setText("Bet is "+bet+" credits, purchase more with £!");
+	                lblStatus.setText("Bet is "+bet+" credits, purchase more with $!");
 	            }
 	            buyCreditsCheck();
 	        }
@@ -458,13 +458,13 @@ public class SlotGameGUI {
 	    /** Checks for number matches and adjusts score depending on result. */
 	    public void matchCheck() {
 	        if (reel1 == reel2 && reel2 == reel3) {
-	            lblStatus.setText("You matched THREE symbols ("+images.get(reel1).getDescription()+")! +£"+df.format(getPrize(payout))+"!");
+	            lblStatus.setText("You matched THREE symbols ("+images.get(reel1).getDescription()+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchThree.setText("Matched Three: "+matchThree());
 	            pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
 	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0));
 	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
 	            } else if (reel1 == reel2 || reel1 == reel3) {
-	            lblStatus.setText("You matched TWO symbols ("+images.get(reel1).getDescription()+")! +£"+df.format(getPrize(payout))+"!");
+	            lblStatus.setText("You matched TWO symbols ("+images.get(reel1).getDescription()+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchTwo.setText("Matched Two: "+matchTwo());
 	            if (reel1 == reel2) {
 	                pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
@@ -474,7 +474,7 @@ public class SlotGameGUI {
 	                pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
 	            }
 	            } else if (reel2 == reel3) {
-	            lblStatus.setText("You matched TWO symbols ("+images.get(reel2).getDescription()+")! +£"+df.format(getPrize(payout))+"!");
+	            lblStatus.setText("You matched TWO symbols ("+images.get(reel2).getDescription()+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchTwo.setText("Matched Two: "+matchTwo());
 	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
 	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
@@ -483,7 +483,7 @@ public class SlotGameGUI {
 	            lblLost.setText("Lost: "+lose());
 	        }
 	        lblCredits.setText("Credits: "+(credits -= bet)); // deduct bet amount from available credits.
-	        lblMoney.setText("Money: £"+df.format((funds += getPrize(payout)))); // If there is a win add amount to cash pot.
+	        lblMoney.setText("Money: $"+df.format((funds += getPrize(payout)))); // If there is a win add amount to cash pot.
 	        lblWon.setText("Wins: "+win()); // increment win amount.
 	    }
 	     
@@ -524,7 +524,7 @@ public class SlotGameGUI {
 	    class SuperPrizeHandler implements ActionListener{
 	        public void actionPerformed(ActionEvent e) {
 	            if (cbSuperJackpot.isSelected() == true) {
-	                lblStatus.setText("Super Prize mode ENABLED! The £ won is now x100!");
+	                lblStatus.setText("Super Prize mode ENABLED! The $ won is now x100!");
 	            }
 	            if (cbSuperJackpot.isSelected() == false) {
 	                lblStatus.setText("Super Prize mode DISABLED! :'(");
