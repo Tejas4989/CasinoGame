@@ -6,10 +6,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -43,6 +50,7 @@ public class SlotGameGUI {
 	    private int reel1 = 1, reel2 = 2, reel3 = 3, reel4 = 4, reel5 = 5, reel6 = 6, reel7 = 7, reel8 = 8, reel9 = 9; // starting values of the reels.
 	    private ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
 	    private DecimalFormat df = new DecimalFormat("0.00");
+	    private Clip audioClip = null;
 	     
 	    public SlotGameGUI(int credits, int boughtCredits, int bet, double payout, double creditBuyout, int reel1, int reel2, int reel3,int reel4, int reel5, int reel6,int reel7, int reel8, int reel9) {
 	        this.credits=credits;
@@ -76,6 +84,29 @@ public class SlotGameGUI {
 	        layoutFrame();
 	        layoutReels();
 	        layoutOther();
+	        loadAudio();
+	    }
+	    
+	    /**
+	     * Load the audio file.
+	     */
+	    private void loadAudio(){
+	    	try {
+		         // Open an audio input stream.
+		         URL url = this.getClass().getResource("/images/sample.wav");
+//		         File audioFile = new File(this.getClass().getResource("/images/sample.wav").getPath());
+		         AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+		         // Get a sound clip resource.
+		         this.audioClip = AudioSystem.getClip();
+		         // Open audio clip and load samples from the audio input stream.
+		         this.audioClip.open(audioIn);
+		      } catch (UnsupportedAudioFileException ex) {
+		         ex.printStackTrace();
+		      } catch (IOException ioEx) {
+		         ioEx.printStackTrace();
+		      } catch (LineUnavailableException luEx) {
+		         luEx.printStackTrace();
+		      }
 	    }
 	     
 	    /** Creates the JFrame and Panels. */
@@ -205,8 +236,8 @@ public class SlotGameGUI {
 	        btnCash.addActionListener(new BuyCreditsHandler());
 	         
 	        tgglSound = new JToggleButton();
-	        tgglSound.setSelected(false);
-	        tgglSound.setText("Sound ON");
+	        tgglSound.setSelected(true);
+	        tgglSound.setText("Sound OFF");
 	        tgglSound.addActionListener(new SoundHandler());
 	         
 	        cbAlwaysWin = new JCheckBox();
@@ -687,7 +718,7 @@ public class SlotGameGUI {
 	            pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
 	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0));
 	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
-	            } else if (reel1 == reel2 || reel1 == reel3) {
+	         } else if (reel1 == reel2 || reel1 == reel3) {
 	            lblStatus.setText("You matched TWO symbols ("+images.get(reel1).getDescription()+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchTwo.setText("Matched Two: "+matchTwo());
 	            if (reel1 == reel2) {
@@ -697,12 +728,12 @@ public class SlotGameGUI {
 	                pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
 	                pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
 	            }
-	            } else if (reel2 == reel3) {
+	         } else if (reel2 == reel3) {
 	            lblStatus.setText("You matched TWO symbols ("+images.get(reel2).getDescription()+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchTwo.setText("Matched Two: "+matchTwo());
 	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
 	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
-	            } else {
+	         } else {
 	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
 	            lblLost.setText("Lost: "+lose());
 	        }
@@ -790,10 +821,13 @@ public class SlotGameGUI {
 	            if (tgglSound.isSelected() == false) {
 	                tgglSound.setText("Sound ON");
 	                lblStatus.setText("Sound effects have been ENABLED!");
+	                audioClip.start();
+	                audioClip.loop(Clip.LOOP_CONTINUOUSLY);
 	                // allowed to play sounds
 	                } else {
 	                tgglSound.setText("Sound OFF");
 	                lblStatus.setText("Sound effects have been DISABLED!");
+	                audioClip.stop();
 	                // disable sounds
 	            }
 	        }
