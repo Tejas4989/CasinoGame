@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -37,8 +39,8 @@ import javax.swing.border.SoftBevelBorder;
 
 public class SlotGameGUI {
 	     
-	    private JButton btnCash, btnSpin;
-	    private JCheckBox cbAlwaysWin, cbSuperJackpot, cbTrollface;
+	    private JButton btnCash, btnSpin, btnPrintReceipt;
+	    private JCheckBox cbAlwaysWin, cbSuperJackpot;
 	    private JFrame frmFrame;
 	    private JLabel lblCredits, lblLost, lblMatchThree, lblMatchTwo, lblMoney, lblReel1, lblReel2, lblReel3, lblReel4, lblReel5, lblReel6, lblReel7, lblReel8, lblReel9, lblStatus, lblWon;
 	    private JPanel pnl1Reels, pnl2Reels, pnl3Reels, pnlReel1, pnlReel2, pnlReel3, pnlReel4, pnlReel5, pnlReel6, pnlReel7, pnlReel8, pnlReel9;
@@ -234,6 +236,13 @@ public class SlotGameGUI {
 	        btnCash.setToolTipText("$"+df.format(bet)+" converts to "+boughtCredits+" credits.");
 	        btnCash.setHorizontalTextPosition(SwingConstants.CENTER);
 	        btnCash.addActionListener(new BuyCreditsHandler());
+	        
+	        btnPrintReceipt = new JButton();
+	        btnPrintReceipt.setBackground(new Color(255,255,255));
+	        btnPrintReceipt.setText("Cash Out");
+	        btnPrintReceipt.setToolTipText("Click to print cash out reciept.");
+	        btnPrintReceipt.setHorizontalTextPosition(SwingConstants.CENTER);
+	        btnPrintReceipt.addActionListener(new PrintRecieptHandler());
 	         
 	        tgglSound = new JToggleButton();
 	        tgglSound.setSelected(true);
@@ -244,11 +253,6 @@ public class SlotGameGUI {
 	        cbAlwaysWin.setText("Always Win Mode");
 	        cbAlwaysWin.setEnabled(false);
 	        cbAlwaysWin.addActionListener(new AlwaysWinHandler());
-	         
-	        cbTrollface = new JCheckBox();
-	        cbTrollface.setText("Trollface");
-	        cbTrollface.setEnabled(false);
-	        cbTrollface.addActionListener(new TrollfaceHandler());
 	         
 	        cbSuperJackpot = new JCheckBox();
 	        cbSuperJackpot.setText("Super Jackpot");
@@ -529,9 +533,9 @@ public class SlotGameGUI {
 	        .addGroup(layout.createSequentialGroup()
 	        .addComponent(cbAlwaysWin)
 	        .addGap(18, 18, 18)
-	        .addComponent(cbTrollface)
-	        .addGap(18, 18, 18)
 	        .addComponent(cbSuperJackpot)
+	        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	        .addComponent(btnPrintReceipt,GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(tgglSound))
 	        .addComponent(btnSpin, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -597,9 +601,9 @@ public class SlotGameGUI {
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
 	        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 	        .addComponent(cbAlwaysWin)
-	        .addComponent(cbTrollface)
 	        .addComponent(cbSuperJackpot)
 	        .addComponent(tgglSound))
+	        .addComponent(btnPrintReceipt)
 	        .addContainerGap())
 	        );
 	         
@@ -611,6 +615,23 @@ public class SlotGameGUI {
 	    class BuyCreditsHandler implements ActionListener {
 	        public void actionPerformed(ActionEvent event) {
 	            buyCredits();
+	        }
+	    }
+	    
+	    /** Performs action when Buy Credits button is clicked. */
+	    class PrintRecieptHandler implements ActionListener {
+	        public void actionPerformed(ActionEvent event) {
+	            //print receipt function goes here..
+	        	PrinterJob pj = PrinterJob.getPrinterJob();
+	    		PrintReciept pr = new PrintReciept();
+	    		pr.setCredits(credits);
+	    		pj.setPrintable(pr, pr.getPageFormat(pj));
+	    		try {
+	    			pj.print();
+	    		} catch (PrinterException e) {
+	    			// TODO: handle exception
+	    			e.printStackTrace();
+	    		}
 	        }
 	    }
 	     
@@ -749,7 +770,6 @@ public class SlotGameGUI {
 	            } else if (prgbarCheatUnlocker.getValue() == 100) { // after 100 wins unlock the cheats.
 	            prgbarCheatUnlocker.setValue(100);
 	            lblStatus.setText("100 wins! Congratulations you've unlocked the cheat menu!");
-	            cbTrollface.setEnabled(true);
 	            cbSuperJackpot.setEnabled(true);
 	            cbAlwaysWin.setEnabled(true);
 	        }
@@ -799,19 +819,6 @@ public class SlotGameGUI {
 	        }
 	    }
 	     
-	    /** Performs action when Troll face check box is clicked. */
-	    class TrollfaceHandler implements ActionListener{
-	        public void actionPerformed(ActionEvent e) {
-	            if (cbTrollface.isSelected() == true && images.get(images.size()-1) != createImageIcon("/images/Trollface.png", "Trollface")) {
-	                images.add(createImageIcon("/images/Trollface.png", "Trollface")); // adds a bonus image to the images ArrayList.
-	                lblStatus.setText("Trollface mode ENABLED! Trolololololol!");
-	            }
-	            if (cbTrollface.isSelected() == false && images.get(images.size()-1) != createImageIcon("/images/Trollface.png", "Trollface")) {
-	                images.remove(images.size()-1); // removes the bonus image (or last one added to the ArrayList) from the images ArrayList.
-	                lblStatus.setText("Trollface mode DISABLED! :'(");
-	            }
-	        }
-	    }
 	     
 	    /** Performs action when sound toggle button is clicked.
 	    * NOT IMPLEMENTED

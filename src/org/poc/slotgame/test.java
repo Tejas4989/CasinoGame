@@ -1,8 +1,12 @@
 package org.poc.slotgame;
 
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +20,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * @author tp250177
+ *
+ */
 public class test {
 	
 	public void testAnimatedGIF(){
@@ -60,8 +68,22 @@ public class test {
 	public static void main(String[] args) throws MalformedURLException {
 		// TODO Auto-generated method stub
 //		new test().testAnimatedGIF();
-		new test().testAudioAMR();
-		Map<String, String> map = new HashMap<String, String>();
+//		new test().testAudioAMR();
+		PrinterJob pj = PrinterJob.getPrinterJob();
+		PrintReciept pr = new PrintReciept();
+		pj.setPrintable(pr, pr.getPageFormat(pj));
+		
+		try {
+			pj.print();
+		} catch (PrinterException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}finally {
+			pj.cancel();
+		}
+		
+		SimpleDateFormat sdf =  new SimpleDateFormat("MM/dd/yy hh:mm:ss a");
+		System.out.println(sdf.format(new Date()));
 	}
 
 }
