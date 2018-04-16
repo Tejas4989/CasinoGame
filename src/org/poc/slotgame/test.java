@@ -1,14 +1,12 @@
 package org.poc.slotgame;
 
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -17,8 +15,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.TransferHandler;
 
 /**
  * @author tp250177
@@ -69,7 +69,7 @@ public class test {
 		// TODO Auto-generated method stub
 //		new test().testAnimatedGIF();
 //		new test().testAudioAMR();
-		PrinterJob pj = PrinterJob.getPrinterJob();
+		/*PrinterJob pj = PrinterJob.getPrinterJob();
 		PrintReciept pr = new PrintReciept();
 		pj.setPrintable(pr, pr.getPageFormat(pj));
 		
@@ -82,8 +82,28 @@ public class test {
 			pj.cancel();
 		}
 		
-		SimpleDateFormat sdf =  new SimpleDateFormat("MM/dd/yy hh:mm:ss a");
+*/		SimpleDateFormat sdf =  new SimpleDateFormat("MM/dd/yy hh:mm:ss a");
 		System.out.println(sdf.format(new Date()));
+		 JLabel label = new JLabel("Label Text");
+
+		    final String propertyName = "text";
+		    label.setTransferHandler(new TransferHandler(propertyName));
+
+		    label.addMouseListener(new MouseAdapter() {
+		      public void mousePressed(MouseEvent evt) {
+		        JComponent comp = (JComponent) evt.getSource();
+		        TransferHandler th = comp.getTransferHandler();
+
+		        th.exportAsDrag(comp, evt, TransferHandler.COPY);
+		      }
+		    });
+		    
+		    JFrame f = new JFrame("Drag and Drop");
+			f.getContentPane().add(label);
+			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			f.pack();
+			f.setLocationRelativeTo(null);
+			f.setVisible(true);
 	}
 
 }

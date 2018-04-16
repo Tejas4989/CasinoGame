@@ -81,7 +81,6 @@ public class PrintReciept implements Printable {
 	            int y=20;
 	            int yShift = 10;
 	            int headerRectHeight=15;
-	            int headerRectHeighta=40;
 	                
 	             g2d.setFont(new Font("Monospaced",Font.PLAIN,9));
 	            g2d.drawString("           	    DEMO!                ", 12, y);y+=yShift;
@@ -103,7 +102,7 @@ public class PrintReciept implements Printable {
 	            g2d.drawString("           	    DEMO!                ",12,y);y+=yShift;
 	            g2d.drawString(" *** *** *** *** *** *** *** *** *** ",12,y);y+=yShift;
 	            g2d.drawString(" *** *** *** *** *** *** *** *** *** ",12,y);y+=yShift;
-	            g2d.drawString("     "+SDF.format(new Date())+"      ",12,y);y+=yShift;
+	            g2d.drawString("       "+SDF.format(new Date())+"    ",12,y);y+=yShift;
 	            g2d.drawString("           	    DEMO!                ",12,y);y+=yShift;
 	            g2d.drawString(" TICKET---------------------------#1 ",12,y);y+=yShift;
 	            g2d.drawString("=====================================",10,y);y+=headerRectHeight;
