@@ -18,6 +18,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -59,7 +60,7 @@ public class SlotGameGUI {
 	    private JProgressBar prgbarCheatUnlocker;
 	    private JSeparator sepCheats, sepStats, sepStats2, sepStatus;
 	    private JToggleButton tgglSound;
-	    private int credits = 100, boughtCredits = 100, bet = 15, matchThree, matchTwo, win, lost;
+	    private int credits = 100, boughtCredits = 100, bet = 1, matchThree, matchTwo, win, lost;
 	    private double payout = 25.0, creditBuyout = 10.0, funds;
 	    private int reel1 = 1, reel2 = 2, reel3 = 3, reel4 = 4, reel5 = 5, reel6 = 6, reel7 = 7, reel8 = 8, reel9 = 9; // starting values of the reels.
 	    private ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
@@ -68,7 +69,8 @@ public class SlotGameGUI {
 	    private Clip audioClip = null;
 	    private ImageIcon bonusIcon = new ImageIcon(getClass().getResource("/images/Trollface.png"));
 	    private static final String IMAGE_PATH = "/images/Final_images/";
-	     
+	    private List<Integer> matchedReelNumbers = null; 
+	    
 	    public SlotGameGUI(int credits, int boughtCredits, int bet, double payout, double creditBuyout, int reel1, int reel2, int reel3,int reel4, int reel5, int reel6,int reel7, int reel8, int reel9) {
 	        this.credits=credits;
 	        this.boughtCredits=boughtCredits;
@@ -755,9 +757,11 @@ public class SlotGameGUI {
 	                pnlReel8.setBackground(new java.awt.Color(255, 215, 0));
 	                pnlReel9.setBackground(new java.awt.Color(255, 215, 0));
 	                genReelNumbers();
-	                matchCheck();
-	                findRowMatches();
-	                findColumnwMatches();
+	                matchedReelNumbers = new ArrayList<Integer>();
+	                if(findRowMatches() || findColumnwMatches()){
+	                	System.out.println("Found expected jackpot" + matchedReelNumbers);
+//	                	matchCheck();
+	                }
 	                } else {
 	                lblStatus.setText("Bet is "+bet+" credits, purchase more with $!");
 	            }
@@ -816,7 +820,24 @@ public class SlotGameGUI {
 	     
 	    /** Checks for number matches and adjusts score depending on result. */
 	    public void matchCheck() {
-	        if (reel1 == reel2 && reel2 == reel3) {
+	    	String[] matchedReel1DescriptionAndPoint = images.get(matchedReelNumbers.get(0)).getDescription().split(",");
+	    	String[] matchedReel2DescriptionAndPoint = images.get(matchedReelNumbers.get(1)).getDescription().split(",");
+	    	String[] matchedReel3DescriptionAndPoint = images.get(matchedReelNumbers.get(2)).getDescription().split(",");
+	    	
+	    	System.out.println("Congrates you won the jackpot of : " + (bet * Integer.parseInt(matchedReel1DescriptionAndPoint[1])));
+	    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
+	    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(payout))+"!");
+	            lblMatchThree.setText("Matched Three: "+matchThree());
+	            pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
+	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0));
+	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
+	    	} else {
+	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
+	            lblLost.setText("Lost: "+lose());
+	        }
+	    	
+	    	
+	        /*if (reel1 == reel2 && reel2 == reel3) {
 	            lblStatus.setText("You matched THREE symbols ("+images.get(reel1).getDescription().split(",")[0]+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchThree.setText("Matched Three: "+matchThree());
 	            pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
@@ -840,7 +861,7 @@ public class SlotGameGUI {
 	         } else {
 	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
 	            lblLost.setText("Lost: "+lose());
-	        }
+	        }*/
 	        lblCredits.setText("Credits: "+(credits -= bet)); // deduct bet amount from available credits.
 	        lblMoney.setText("Money: $"+df.format((funds += getPrize(payout)))); // If there is a win add amount to cash pot.
 	        lblWon.setText("Wins: "+win()); // increment win amount.
@@ -849,26 +870,35 @@ public class SlotGameGUI {
 	    /**
 	     *  Find row matches
 	     */
-	    public void findRowMatches(){
+	    public boolean findRowMatches(){
 			if (reel1 == reel2 && reel1 == reel3 && reel2 == reel3) {
 				// change one of the reel icon and set to other icon
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All first rows reel are matched.");
+				return false;
 			}else if(reel1 == reel2 || reel1 == reel3 || reel2 == reel3){
+				matchedReelNumbers.add(reel1);
+    			matchedReelNumbers.add(reel2);
+    			matchedReelNumbers.add(reel3);
 	    		if(reel1 == reel2){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel1 and reel2 icons are match");
 	    			// get the matched Icon's half cutting image
-//	    			ImageIcon matchedIcon = new ImageIcon(getClass().getResource("/images/Final_images/"+images.get(reel1).getDescription().split(",")[0]+"_half.png"));
-	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel1).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel1).getDescription();
+	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel1 == reel3){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel1 and reel3 icons are match");
-	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel1).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel1).getDescription();
+	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel2 == reel3){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel2 and reel3 icons are match");
-	    			lblReel4.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel3).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel3).getDescription();
+	    			lblReel4.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
 			// second row match
@@ -876,19 +906,29 @@ public class SlotGameGUI {
 				// change one of the reel icon and set to other icon
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All second rows reel are matched.");
+				return false;
 			}else if(reel4 == reel5 || reel4 == reel6 || reel5 == reel6){
+				matchedReelNumbers.add(reel4);
+    			matchedReelNumbers.add(reel5);
+    			matchedReelNumbers.add(reel6);
 	    		if(reel4 == reel5){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel4 and reel5 icons are match");
-	    			lblReel9.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel4).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel4).getDescription();
+	    			lblReel9.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel4 == reel6){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel4 and reel6 icons are match");
-	    			lblReel2.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel4).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel4).getDescription();
+	    			lblReel2.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel5 == reel6){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel5 and reel6 icons are match");
-	    			lblReel7.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel5).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel5).getDescription();
+	    			lblReel7.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
 			
@@ -897,45 +937,66 @@ public class SlotGameGUI {
 				// change one of the reel icon and set to other icon
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All first rows reel are matched.");
+				return false;
 //				lblReel6.setIcon(bonusIcon);
 			}else if(reel7 == reel8 || reel7 == reel9 || reel8 == reel9){
+				matchedReelNumbers.add(reel7);
+    			matchedReelNumbers.add(reel8);
+    			matchedReelNumbers.add(reel9);
 	    		if(reel7 == reel8){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel7 and reel8 icons are match");
-	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel7).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel7).getDescription();
+	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel7 == reel9){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel7 and reel9 icons are match");
-	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel7).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel7).getDescription();
+	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel8 == reel9){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel8 and reel9 icons are match");
-	    			lblReel4.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel8).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel8).getDescription();
+	    			lblReel4.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
+			return false;
 	    }
 	    
 	    /**
 	     *  Find column matches
 	     */
-	    public void findColumnwMatches(){
+	    public boolean findColumnwMatches(){
 			if (reel1 == reel4 && reel1 == reel7 && reel4 == reel7) {
 				// change one of the reel icon and set to other icon
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All first columns reel are matched.");
+				return false;
 			}else if(reel1 == reel4 || reel1 == reel7 || reel4 == reel7){
+				matchedReelNumbers.add(reel1);
+    			matchedReelNumbers.add(reel4);
+    			matchedReelNumbers.add(reel7);
 	    		if(reel1 == reel4){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel1 and reel4 icons are match");
-	    			lblReel8.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel1).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel1).getDescription();
+	    			lblReel8.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel1 == reel7){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel1 and reel7 icons are match");
-	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel1).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel1).getDescription();
+	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel4 == reel7){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel4 and reel7 icons are match");
-	    			lblReel2.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel4).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel4).getDescription();
+	    			lblReel4.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
 			// second row match
@@ -944,18 +1005,27 @@ public class SlotGameGUI {
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All second columns reel are matched.");
 			}else if(reel2 == reel5 || reel2 == reel8 || reel5 == reel8){
+				matchedReelNumbers.add(reel2);
+    			matchedReelNumbers.add(reel5);
+    			matchedReelNumbers.add(reel8);
 	    		if(reel2 == reel5){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel2 and reel5 icons are match");
-	    			lblReel7.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel2).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel2).getDescription();
+	    			lblReel7.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel2 == reel8){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel2 and reel8 icons are match");
-	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel2).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel2).getDescription();
+	    			lblReel6.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel5 == reel8){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel5 and reel8 icons are match");
-	    			lblReel1.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel5).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel5).getDescription();
+	    			lblReel1.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
 			
@@ -965,20 +1035,30 @@ public class SlotGameGUI {
 				// then based on pair position, set the bonus icon to replacement place.
 				System.out.println("All first columns reel are matched.");
 			}else if(reel3 == reel6 || reel3 == reel9 || reel6 == reel9){
+				matchedReelNumbers.add(reel3);
+    			matchedReelNumbers.add(reel6);
+    			matchedReelNumbers.add(reel9);
 	    		if(reel3 == reel6){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel3 and reel6 icons are match");
-	    			lblReel8.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel3).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel3).getDescription();
+	    			lblReel8.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}else if(reel3 == reel9){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel3 and reel9 icons are match");
-	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel3).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel3).getDescription();
+	    			lblReel5.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}if(reel6 == reel9){
 	    			// Get the replacement place for this pair and set the bonus icon.
 	    			System.out.println("reel6 and reel9 icons are match");
-	    			lblReel2.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+images.get(reel6).getDescription().split(",")[0]+"_half.png")));
+	    			String reelImageIconDescription = images.get(reel6).getDescription();
+	    			lblReel2.setIcon(new ImageIcon(getClass().getResource(IMAGE_PATH+reelImageIconDescription.split(",")[0]+"_half.png"), reelImageIconDescription));
+	    			return true;
 	    		}
 	    	}
+			return false;
 	    }
 	     
 	    /** sets progress bar equal to the current win count. if bar is full it unlocks cheat menu */
@@ -1030,13 +1110,17 @@ public class SlotGameGUI {
 	        public void actionPerformed(ActionEvent e) {
 	        	JRadioButton rb = (JRadioButton)e.getSource();
 	            if(rb == rb1X){
+	            	bet = 1;
 	            	System.out.println("bet 1 is applied");
 	            }else if(rb == rb2X){
 	            	System.out.println("Bet 2 is applied");
+	            	bet = 2;
 	            }else if(rb == rb3X){
 	            	System.out.println("Bet 3 is applied");
+	            	bet = 3;
 	            }else {
 	            	System.out.println("Bet 4 is applied");
+	            	bet = 4;
 	            }
 	        }
 	    }
@@ -1105,7 +1189,7 @@ public class SlotGameGUI {
 	    *    •    Remove images here to make game easier.
 	    */
 	    public void loadImages() {
-	        images.add(createImageIcon(IMAGE_PATH+"/Apple.png", "Banana,10"));
+	        images.add(createImageIcon(IMAGE_PATH+"/Apple.png", "Apple,10"));
 	        images.add(createImageIcon(IMAGE_PATH+"/Avocado.png", "Avocado,20"));
 	        images.add(createImageIcon(IMAGE_PATH+"/Banana.png", "Banana,30"));
 	        images.add(createImageIcon(IMAGE_PATH+"/Cherry.png", "Cherry,40"));
@@ -1196,6 +1280,7 @@ public class SlotGameGUI {
 	            JComponent c = (JComponent) e.getSource();
 	            TransferHandler handler = c.getTransferHandler();
 	            handler.exportAsDrag(c, e, TransferHandler.COPY);
+	            matchCheck();
 	        }
 	    	
 	        @Override
@@ -1208,7 +1293,8 @@ public class SlotGameGUI {
 	                System.out.println(name + ": ");
 	             }
 	            TransferHandler handler = c.getTransferHandler();
-	            handler.exportAsDrag(c, e, TransferHandler.COPY);
+	            handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
+	            matchCheck();
 	        }
 	        
 	       /* @Override
