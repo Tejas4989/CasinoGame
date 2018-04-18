@@ -33,9 +33,11 @@ public class TestLayout {
                 frame.setLayout(new GridBagLayout());
 
                 GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(4, 4, 4, 4);
-                gbc.gridx = 0;
-                gbc.weightx = 1;
+                gbc.insets = new Insets(4,4,4,4);
+                
+                // insert pnlreels jpanel here.
+                gbc.gridx = 1;
+//                gbc.weightx = 0;
                 gbc.gridy = 0;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 frame.add(createPane(Color.RED), gbc);
@@ -43,22 +45,43 @@ public class TestLayout {
                 frame.add(createPane(Color.GREEN), gbc);
                 gbc.gridy++;
                 frame.add(createPane(Color.BLUE), gbc);
-                gbc.gridy++;
-                frame.add(createPane(Color.CYAN), gbc);
-                gbc.gridy++;
-                frame.add(createPane(Color.MAGENTA), gbc);
-                gbc.gridy++;
-                frame.add(createPane(Color.ORANGE), gbc);
-                gbc.gridy++;
-                frame.add(createPane(Color.PINK), gbc);
-
-                gbc.gridx++;
-                gbc.weightx = 0;
+                
+                //Add spin/ play button here
+                gbc.gridx = 0;
+//                gbc.weightx = 0;
                 gbc.gridy = 0;
-                gbc.weighty = 1;
-                gbc.gridheight = GridBagConstraints.REMAINDER;
+                gbc.gridheight = 3;
                 gbc.fill = GridBagConstraints.VERTICAL;
-                frame.add(createPane(Color.YELLOW), gbc);
+                frame.add(createPane(Color.YELLOW), gbc);               
+                
+                // add one row for bet radio button
+                gbc.gridx = 0;
+                gbc.gridy =3;
+                gbc.weightx=0.5;
+                gbc.gridwidth=2;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                frame.add(createPane(Color.CYAN), gbc);
+                
+                // add separator line
+                
+                //add credit, won, lost and balance 
+                gbc.gridx = 0;
+                gbc.gridy = 4; // 5 the row
+                gbc.weightx=0.2;
+                gbc.weighty= 0.1;
+                gbc.gridwidth=2;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                frame.add(createPane(Color.ORANGE), gbc);
+                
+              //add Cashout, Buy Credit, sound off/on button 
+                gbc.gridx = 0;
+                gbc.gridy = 5; // 5 the row
+                gbc.weightx=0.2;
+                gbc.weighty= 0.2;
+                gbc.gridwidth=2;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                frame.add(createPane(Color.MAGENTA), gbc);
+                
 
                 frame.pack();
                 frame.setLocationRelativeTo(null);

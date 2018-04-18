@@ -591,14 +591,14 @@ public class SlotGameGUI {
 	     * Grid bag layout for Play button and reels
 	     */
 	    private void gridBagLayout(){
-	    	GridBagLayout gbLayout = new GridBagLayout();
+	    	/*GridBagLayout gbLayout = new GridBagLayout();
 	    	GridBagConstraints gbc = new GridBagConstraints();
 	    	gbc.insets = new Insets(4, 4, 4, 4);
 	    	 gbc.gridx = 0;
              gbc.weightx = 1;
              gbc.gridy = 0;
              gbc.fill = GridBagConstraints.HORIZONTAL;
-             gbLayout.add(pnl1Reels);
+             gbLayout.add(pnl1Reels, gbc);
              gbc.gridy++;
              gbLayout.add(pnl2Reels, gbc);
              gbc.gridy++;
@@ -610,7 +610,7 @@ public class SlotGameGUI {
              gbc.weighty = 1;
              gbc.gridheight = GridBagConstraints.REMAINDER;
              gbc.fill = GridBagConstraints.VERTICAL;
-             gbLayout.add(btnSpin, gbc);
+             gbLayout.add(btnSpin, gbc);*/
 	    }
 	     
 	    /** lays out the remaining labels, check boxes, progress bars, etc. */
@@ -861,9 +861,9 @@ public class SlotGameGUI {
 	    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
 	    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchThree.setText("Matched Three: "+matchThree());
-	            pnlReel1.setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
-	            pnlReel2.setBackground(new java.awt.Color(255, 0, 0));
-	            pnlReel3.setBackground(new java.awt.Color(255, 0, 0));
+	            matchedReelNumbers.get(0).setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
+	            matchedReelNumbers.get(1).setBackground(new java.awt.Color(255, 0, 0));
+	            matchedReelNumbers.get(2).setBackground(new java.awt.Color(255, 0, 0));
 	    	} else {
 	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
 	            lblLost.setText("Lost: "+lose());
