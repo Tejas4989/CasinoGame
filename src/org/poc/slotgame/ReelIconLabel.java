@@ -1,14 +1,15 @@
 package org.poc.slotgame;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DropTarget;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.TransferHandler;
+
 
 
 public class ReelIconLabel extends JLabel{
@@ -24,9 +25,15 @@ public class ReelIconLabel extends JLabel{
 //	private DGListener dgListener;
 //	public DSListener dsListner;
 	
+	public static ImageIcon getScaledImageIcon(ImageIcon icon){
+		if(icon.getDescription().startsWith("Animated"))
+			return icon;
+		return new ImageIcon(icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH), icon.getDescription());
+	}
+	
 	public ReelIconLabel(ImageIcon icon) {
 		// TODO Auto-generated constructor stub
-		this.setIcon(icon);
+		this.setIcon(getScaledImageIcon(icon));
 		this.setTransferHandler(new TransferHandler("icon"));
 		
 		// set the Drag source and related listeners
@@ -40,6 +47,10 @@ public class ReelIconLabel extends JLabel{
 		this.dropTarget = new DropTarget(this, this.acceptableActions,this.dtListener,true);
 		this.setDragSource(dragSource);
 		this.setDropTarget(dropTarget);*/
+	}
+	
+	public void setBg(Color bg){
+		setBackground(bg);
 	}
 	
 	/*public void showBorder(boolean flag){

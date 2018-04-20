@@ -3,6 +3,7 @@ package org.poc.slotgame;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
@@ -39,7 +40,7 @@ public class PrintReciept implements Printable {
 	     PageFormat pf = pj.defaultPage();
 	     Paper paper = pf.getPaper();    
 
-	     double middleHeight =10.0;  
+	     double middleHeight =15.0;  
 	     double headerHeight = 2.0;                  
 	     double footerHeight = 2.0;                  
 	     double width = convert_CM_To_PPI(8);      //printer know only point per inch.default value is 72ppi
@@ -74,7 +75,7 @@ public class PrintReciept implements Printable {
 			Graphics2D g2d = (Graphics2D)graphics;
 			graphics.translate((int) (pageFormat.getImageableX()), (int) (pageFormat.getImageableY()));
 			//Temp imageIcon
-			ImageIcon printImage = new javax.swing.ImageIcon(getClass().getResource("/images/Coin.png"));
+			ImageIcon printImage = new ImageIcon(new ImageIcon(getClass().getResource(SlotGameGUI.IMAGE_PATH+"sample_qr.png")).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 			System.out.println(printImage.getIconHeight() + " width :  "+ printImage.getIconWidth());
 	        try{
 	            /*Draw Header*/
@@ -108,7 +109,7 @@ public class PrintReciept implements Printable {
 	            g2d.drawString("=====================================",10,y);y+=headerRectHeight;
 	            g2d.drawString("              PRIZE VALUE            ",12,y);y+=yShift;
 	            g2d.drawString("****************$"+getCredits()+"**************",12,y);y+=yShift;
-	            g2d.drawImage(printImage.getImage(), 12, y, null);y+=yShift;
+	            g2d.drawImage(printImage.getImage(), 85, y, null);y+=60;
 	            g2d.drawString("           	    DEMO!                ",12,y);y+=yShift;
 	            g2d.drawString("=====================================",12,y);y+=yShift;
 	            g2d.drawString("VOID IF MUTILATED.....VAL # 840799550",12,y);y+=yShift;
@@ -119,7 +120,8 @@ public class PrintReciept implements Printable {
 
 	    }
 	    catch(Exception r){
-	    r.printStackTrace();
+//	    	r.printStackTrace();
+	    	System.out.println("User Cancelled the receipt printing");
 	    }
 
 	              result = PAGE_EXISTS;    
