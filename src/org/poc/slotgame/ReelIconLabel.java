@@ -5,7 +5,10 @@ import java.awt.Image;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DropTarget;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.TransferHandler;
@@ -204,6 +207,18 @@ public class ReelIconLabel extends JLabel{
 		}
 		
 	}*/
+	
+	/**
+	 * Set the Animation to available Icons
+	 * @param icon
+	 * @param images
+	 */
+	public void setAnimatedReelIcons(ImageIcon icon, ImageIcon[] icons){
+		AnimatedIcon animated = new AnimatedIcon(this ,3000, 3, icons);
+		animated.start();
+		this.setIcon(icon);
+//		animated.stop();
+	}
 	
 	
 

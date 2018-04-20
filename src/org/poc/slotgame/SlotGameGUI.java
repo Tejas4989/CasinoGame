@@ -58,6 +58,7 @@ public class SlotGameGUI {
 	    private double payout = 25.0, creditBuyout = 10.0, funds;
 	    private int reel1 = 1, reel2 = 2, reel3 = 3, reel4 = 4, reel5 = 5, reel6 = 6, reel7 = 7, reel8 = 8, reel9 = 9; // starting values of the reels.
 	    private ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
+	    private ImageIcon[] icons = null;
 	    private Map<String, String> replacementIconMap = new HashMap<String, String>();
 	    private DecimalFormat df = new DecimalFormat("0.00");
 	    private Clip audioClip = null;
@@ -835,15 +836,16 @@ public class SlotGameGUI {
 	     
 	    /** Sets the reels icon based on loaded image in images ArrayList. */
 	    public void setReelIcon(int ico1, int ico2, int ico3, int ico4, int ico5, int ico6, int ico7, int ico8, int ico9) {
-	        lblReel1.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico1))); // icon = the ArrayList index = random reel number
-	        lblReel2.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico2)));
-	        lblReel3.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico3)));
-	        lblReel4.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico4)));
-	        lblReel5.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico5)));
-	        lblReel6.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico6)));
-	        lblReel7.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico7)));
-	        lblReel8.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico8)));
-	        lblReel9.setIcon(ReelIconLabel.getScaledImageIcon(images.get(ico9)));
+	    	
+	        lblReel1.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico1)), icons); // icon = the ArrayList index = random reel number
+	        lblReel2.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico2)), icons);
+	        lblReel3.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico3)), icons);
+	        lblReel4.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico4)), icons);
+	        lblReel5.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico5)), icons);
+	        lblReel6.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico6)), icons);
+	        lblReel7.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico7)), icons);
+	        lblReel8.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico8)), icons);
+	        lblReel9.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico9)), icons);
 	    }
 	     
 	    /** Checks for number matches and adjusts score depending on result. */
@@ -1233,6 +1235,12 @@ public class SlotGameGUI {
 	        images.add(createImageIcon(IMAGE_PATH+"Strawberry.png", "Strawberry,80"));
 	        images.add(createImageIcon(IMAGE_PATH+"Watermelon.png", "Watermelon,90"));
 	        images.add(createImageIcon(IMAGE_PATH+"animated.gif", "Animated,100"));
+	        //convert to icons array
+	        icons = new ImageIcon[images.size()];
+	        int i=0;
+	        for (ImageIcon imageIcon : images) {
+				icons[i++] = imageIcon;
+			}
 	    }
 	     
 	    /** Create a new ImageIcon, unless the URL is not found. */
