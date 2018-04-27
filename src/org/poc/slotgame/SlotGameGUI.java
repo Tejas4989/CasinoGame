@@ -837,15 +837,15 @@ public class SlotGameGUI {
 	    /** Sets the reels icon based on loaded image in images ArrayList. */
 	    public void setReelIcon(int ico1, int ico2, int ico3, int ico4, int ico5, int ico6, int ico7, int ico8, int ico9) {
 	    	
-	        lblReel1.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico1)), icons); // icon = the ArrayList index = random reel number
-	        lblReel2.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico2)), icons);
-	        lblReel3.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico3)), icons);
-	        lblReel4.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico4)), icons);
-	        lblReel5.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico5)), icons);
-	        lblReel6.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico6)), icons);
-	        lblReel7.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico7)), icons);
-	        lblReel8.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico8)), icons);
-	        lblReel9.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico9)), icons);
+	        lblReel1.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico1)), images); // icon = the ArrayList index = random reel number
+	        lblReel2.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico2)), images);
+	        lblReel3.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico3)), images);
+	        lblReel4.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico4)), images);
+	        lblReel5.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico5)), images);
+	        lblReel6.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico6)), images);
+	        lblReel7.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico7)), images);
+	        lblReel8.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico8)), images);
+	        lblReel9.setAnimatedReelIcons(ReelIconLabel.getScaledImageIcon(images.get(ico9)), images);
 	    }
 	     
 	    /** Checks for number matches and adjusts score depending on result. */
@@ -854,8 +854,8 @@ public class SlotGameGUI {
 	    	String[] matchedReel2DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(1).getIcon()).getDescription().split(",");
 	    	String[] matchedReel3DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(2).getIcon()).getDescription().split(",");
 	    	
-	    	System.out.println("Congrates you won the jackpot of : " + (bet * Integer.parseInt(matchedReel1DescriptionAndPoint[1])));
 	    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
+	    		System.out.println("Congrates you won the jackpot of : " + (bet * Integer.parseInt(matchedReel1DescriptionAndPoint[1])));
 	    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(payout))+"!");
 	            lblMatchThree.setText("Matched Three: "+matchThree());
 	            matchedReelNumbers.get(0).setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
@@ -1315,17 +1315,15 @@ public class SlotGameGUI {
 
 			JComponent c = (JComponent) e.getSource();
 			TransferHandler handler = c.getTransferHandler();
-			handler.exportAsDrag(c, e, TransferHandler.COPY);
-			frmFrame.repaint();
-			matchCheck();
+			handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
 		}
 
 		public void mouseReleased(MouseEvent e) {
 			System.out.println(e.getPoint());
 			JComponent c = (JComponent) e.getSource();
 			TransferHandler handler = c.getTransferHandler();
-			handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
-			frmFrame.repaint();
+			handler.exportAsDrag(c, e, TransferHandler.COPY);
+			c.repaint();
 			matchCheck();
 		}
 

@@ -213,11 +213,10 @@ public class ReelIconLabel extends JLabel{
 	 * @param icon
 	 * @param images
 	 */
-	public void setAnimatedReelIcons(ImageIcon icon, ImageIcon[] icons){
-		AnimatedIcon animated = new AnimatedIcon(this ,3000, 3, icons);
+	public void setAnimatedReelIcons(ImageIcon icon, List<ImageIcon> icons){
+		AnimatedIcon animated = new AnimatedIcon(this , 200, 5, icons);
 		animated.start();
-		this.setIcon(icon);
-//		animated.stop();
+		this.setIcon(animated);
 	}
 	
 	

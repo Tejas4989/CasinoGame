@@ -4,9 +4,11 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.ArrayList;
-import javax.swing.Icon;
+import java.util.List;
+import java.util.Random;
+
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
@@ -15,21 +17,25 @@ import javax.swing.Timer;
  *  sequence. This animation sequence can be configured to keep repeating or
  *  to stop after a specified number of cycles.
  *
- *  The size of the Icon is determined to be the largest width or height of
- *  any Icon. All other Icons are then aligned within the space available when
- *  the Icon is painted.
+ *  The size of the ImageIcon is determined to be the largest width or height of
+ *  any ImageIcon. All other Icons are then aligned within the space available when
+ *  the ImageIcon is painted.
  *
  *  An AnimatedIcon cannot be shared by different components. However, the Icons
  *  added to an AnimatedIcon can be shared.
  *
- *  The animation sequence is a simple sequential display of each Icon. When
- *  the end is reached the animation restarts at the first Icon. Icons are
+ *  The animation sequence is a simple sequential display of each ImageIcon. When
+ *  the end is reached the animation restarts at the first ImageIcon. Icons are
  *  displayed in the order in which they are added. To create custom animation
  *  sequences you will need to override the getNextIconIndex() and
  *  isCycleCompleted() methods.
  */
-public class AnimatedIcon implements Icon, ActionListener, Runnable
+public class AnimatedIcon extends ImageIcon implements Runnable, ActionListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6413091411360520861L;
 	private final static int DEFAULT_DELAY = 500;
 	private final static int DEFAULT_CYCLES = -1;
 
@@ -40,7 +46,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	public final static float RIGHT = 1.0f;
 
 	private JComponent component;
-	private List<Icon> icons = new ArrayList<Icon>();
+	private List<ImageIcon> icons = new ArrayList<ImageIcon>();
 
 	private int cycles;
 	private boolean showFirstIcon = false;
@@ -48,16 +54,16 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	private float alignmentX = CENTER;
 	private float alignmentY = CENTER;
 
-	//  Track the X, Y location of the Icon within its parent JComponent so we
-	//  can request a repaint of only the Icon and not the entire JComponent
+	//  Track the X, Y location of the ImageIcon within its parent JComponent so we
+	//  can request a repaint of only the ImageIcon and not the entire JComponent
 
 	private int iconX;
 	private int iconY;
 
-	//  Used for the implementation of Icon interface
+	//  Used for the implementation of ImageIcon interface
 
-	private int iconWidth;
-	private int iconHeight;
+	private int iconWidth = 120;
+	private int iconHeight = 120;
 
 	//  Use to control processing
 
@@ -73,7 +79,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	 *  @param component  the component the icon will be painted on
 	 *  @param icons	  the Icons to be painted as part of the animation
 	 */
-	public AnimatedIcon(JComponent component, Icon... icons)
+	public AnimatedIcon(JComponent component, ImageIcon... icons)
 	{
 		this(component, DEFAULT_DELAY, icons);
 	}
@@ -85,7 +91,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	 *  @param delay      the delay between painting each icon, in milli seconds
 	 *  @param icons	  the Icons to be painted as part of the animation
 	 */
-	public AnimatedIcon(JComponent component, int delay, Icon... icons)
+	public AnimatedIcon(JComponent component, int delay, ImageIcon... icons)
 	{
 		this(component, delay, DEFAULT_CYCLES, icons);
 	}
@@ -98,7 +104,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	 *  @param cycles     the number of times to repeat the animation sequence
 	 *  @param icons	  the Icons to be painted as part of the animation
 	 */
-	public AnimatedIcon(JComponent component, int delay, int cycles, Icon... icons)
+	public AnimatedIcon(JComponent component, int delay, int cycles, ImageIcon... icons)
 	{
 		this.component = component;
 		setCycles( cycles );
@@ -107,7 +113,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 		{
 			if (icons[i] == null)
 			{
-				String message = "Icon (" + i + ") cannot be null";
+				String message = "ImageIcon (" + i + ") cannot be null";
 				throw new IllegalArgumentException( message );
 			}
 			else
@@ -118,34 +124,51 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 
 		timer = new Timer(delay, this);
 	}
+	
+	
+	/**
+	 *  Create an AnimatedIcon specifying all the properties.
+	 *
+	 *  @param component  the component the icon will be painted on
+	 *  @param delay      the delay between painting each icon, in milli seconds
+	 *  @param cycles     the number of times to repeat the animation sequence
+	 *  @param icons	  List of Icons
+	 */
+	public AnimatedIcon(JComponent component, int delay, int cycles, List<ImageIcon>icons)
+	{
+		this.component = component;
+		setCycles( cycles );
+		this.icons = icons;
+		timer = new Timer(delay, this);
+	}
 
 	/**
 	 *  Add Icons to be used in the animation.
 	 *
 	 *  @param icons  the icons to be added
 	 */
-	public void addIcon(Icon... icons)
+	public void addIcon(ImageIcon... icons)
 	{
-		for (Icon icon : icons)
+		for (ImageIcon icon : icons)
 		{
 			if (icon != null)
 			{
-				this.icons.add( icon );
+//				this.icons.add( icon );
 				calculateIconDimensions();
 			}
 		}
 	}
 
 	/**
-	 *  Calculate the width and height of the Icon based on the maximum
-	 *  width and height of any individual Icon.
+	 *  Calculate the width and height of the ImageIcon based on the maximum
+	 *  width and height of any individual ImageIcon.
 	 */
 	private void calculateIconDimensions()
 	{
 		iconWidth = 0;
 		iconHeight = 0;
 
-		for (Icon icon : icons)
+		for (ImageIcon icon : icons)
 		{
 			iconWidth = Math.max(iconWidth, icon.getIconWidth());
 			iconHeight = Math.max(iconHeight, icon.getIconHeight());
@@ -153,7 +176,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Get the alignment of the Icon on the x-axis
+	 *  Get the alignment of the ImageIcon on the x-axis
 	 *
 	 *  @return the alignment
 	 */
@@ -184,7 +207,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Specify the vertical alignment of the Icon.
+	 *  Specify the vertical alignment of the ImageIcon.
 	 *
 	 *  @param alignmentY  common values TOP, CENTER (default) or BOTTOM
 	 *                     although any value between 0.0 and 1.0 can be used
@@ -195,9 +218,9 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Get the index of the currently visible Icon
+	 *  Get the index of the currently visible ImageIcon
 	 *
-	 *  @return the index of the Icon
+	 *  @return the index of the ImageIcon
 	 */
 	public int getCurrentIconIndex()
 	{
@@ -205,9 +228,9 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Set the index of the Icon to be displayed and then repaint the Icon.
+	 *  Set the index of the ImageIcon to be displayed and then repaint the ImageIcon.
 	 *
-	 *  @param index  the index of the Icon to be displayed
+	 *  @param index  the index of the ImageIcon to be displayed
 	 */
 	public void setCurrentIconIndex(int index)
 	{
@@ -238,7 +261,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Get the delay between painting each Icon
+	 *  Get the delay between painting each ImageIcon
 	 *
 	 *  @return the delay
 	 */
@@ -258,13 +281,13 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Get the Icon at the specified index.
+	 *  Get the ImageIcon at the specified index.
 	 *
-	 *  @param index  the index of the Icon to be returned
-	 *  @return  the Icon at the specifed index
+	 *  @param index  the index of the ImageIcon to be returned
+	 *  @return  the ImageIcon at the specifed index
 	 *  @exception IndexOutOfBoundsException  if the index is out of range
 	 */
-	public Icon getIcon(int index)
+	public ImageIcon getIcon(int index)
 	{
 		return icons.get( index );
 	}
@@ -290,7 +313,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Display the first icon when animation is finished. Otherwise the Icon
+	 *  Display the first icon when animation is finished. Otherwise the ImageIcon
 	 *  that was visible when the animation stopped will remain visible.
 	 *
 	 *  @param showFirstIcon  true when the first icon is to be displayed,
@@ -303,7 +326,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 
 	/**
 	 *  Pause the animation. The animation can be restarted from the
-	 *  current Icon using the restart() method.
+	 *  current ImageIcon using the restart() method.
 	 */
 	public void pause()
 	{
@@ -317,10 +340,11 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	{
 		if (!timer.isRunning())
 		{
-			setCurrentIconIndex(0);
+			setCurrentIconIndex(new Random().nextInt(icons.size()));
 			animationFinished = false;
 			cyclesCompleted = 0;
             timer.start();
+//            timer.
 		}
 	}
 
@@ -345,12 +369,12 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	public void stop()
 	{
 		timer.stop();
-		setCurrentIconIndex(0);
+		setCurrentIconIndex(new Random().nextInt(icons.size()));
 		animationFinished = true;
 	}
 
 //
-//  Implement the Icon Interface
+//  Implement the ImageIcon Interface
 //
 	/**
 	 *  Gets the width of this icon.
@@ -394,9 +418,13 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 			iconY = y;
 		}
 
-		//  Determine the proper alignment of the Icon, then paint it
+		//  Determine the proper alignment of the ImageIcon, then paint it
 
-		Icon icon = icons.get( currentIconIndex );
+		ImageIcon icon = icons.get( currentIconIndex );
+
+		if(icon.getDescription().startsWith("Animated")){
+			System.out.println("Animated Icon");
+		}
    		int width = getIconWidth();
    		int height = getIconHeight();
 
@@ -417,50 +445,17 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 		return Math.round(offset);
 	}
 
-//
-//  Implement the ActionListener interface
-//
-	/**
-	 *  Control the animation of the Icons when the Timer fires.
-	 */
-	public void actionPerformed(ActionEvent e)
-	{
-		//	Display the next Icon in the animation sequence
-
-		setCurrentIconIndex( getNextIconIndex(currentIconIndex, icons.size()) );
-		component.repaint(iconX, iconY, iconWidth, iconHeight);
-
-		//  Track the number of cycles that have been completed
-
-		if (isCycleCompleted(currentIconIndex, icons.size()))
-		{
-			cyclesCompleted++;
-		}
-
-		//  Stop the animation when the specified number of cycles is completed
-
-		if (cycles > 0
-		&&  cycles <= cyclesCompleted)
-		{
-			timer.stop();
-			animationFinished = true;
-
-			//  Display the first Icon when required
-
-			if (isShowFirstIcon()
-			&&  getCurrentIconIndex() != 0)
-			{
-				new Thread(this).start();
-			}
-		}
-	}
 
 //
 //  Implement the Runnable interface
 //
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
 	public void run()
 	{
-		//  Wait one more delay interval before displaying the first Icon
+		//  Wait one more delay interval before displaying the first ImageIcon
 
 		try
 		{
@@ -471,18 +466,18 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Get the index of the next Icon to be displayed.
+	 *  Get the index of the next ImageIcon to be displayed.
 	 *
 	 *  This implementation displays the Icons in the order in which they were
 	 *  added to this class. When the end is reached it will start back at the
-	 *  first Icon.
+	 *  first ImageIcon.
 	 *
 	 *  Typically this method, along with the isCycleCompleted() method, would
 	 *  be extended to provide a custom animation sequence.
 	 *
-	 *  @param currentIndex  the index of the Icon currently displayed
+	 *  @param currentIndex  the index of the ImageIcon currently displayed
 	 *  @param iconCount  the number of Icons to be displayed
-	 *  @return  the index of the next Icon to be displayed
+	 *  @return  the index of the next ImageIcon to be displayed
 	 */
 	protected int getNextIconIndex(int currentIndex, int iconCount)
 	{
@@ -490,7 +485,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	}
 
 	/**
-	 *  Check if the currently visible Icon is the last Icon to be displayed
+	 *  Check if the currently visible ImageIcon is the last ImageIcon to be displayed
 	 *  in the animation sequence. If so, this indicates the completion of a
 	 *  single cycle. The animation can continue for an unlimited number of
 	 *  cycles or for a specified number of cycles.
@@ -500,12 +495,44 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
 	 *  Typically this method, along with the getNextIconIndex() method, would
 	 *  be extended to provide a custom animation sequence.
 	 *
-	 *  @param currentIndex  the index of the Icon currently displayed
+	 *  @param currentIndex  the index of the ImageIcon currently displayed
 	 *  @param iconCount the number of Icons to be displayed
-	 *  @return  the index of the next Icon to be displayed
+	 *  @return  the index of the next ImageIcon to be displayed
 	 */
 	protected boolean isCycleCompleted(int currentIndex, int iconCount)
 	{
 		return currentIndex == iconCount - 1;
+	}
+
+	/**
+	 *  Control the animation of the Icons when the Timer fires.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// Display the next ImageIcon in the animation sequence
+		setCurrentIconIndex( getNextIconIndex(currentIconIndex, icons.size()) );
+		component.repaint(iconX, iconY, iconWidth, iconHeight);
+
+		//  Track the number of cycles that have been completed
+
+//		if (isCycleCompleted(currentIconIndex, icons.size()))
+//		{
+			cyclesCompleted++;
+//		}
+
+		//  Stop the animation when the specified number of cycles is completed
+
+		if (cycles > 0
+		&&  cycles <= cyclesCompleted)
+		{
+			stop();
+			//  Display the first ImageIcon when required
+
+			if (isShowFirstIcon()
+			&&  getCurrentIconIndex() != 0)
+			{
+				new Thread(this).start();
+			}
+		}
 	}
 }

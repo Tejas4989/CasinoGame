@@ -1,18 +1,103 @@
 package org.poc.slotgame;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import java.awt.image.*;
+class AnimateJLabel extends JFrame
+{
+JLabel l;
+ImageIcon icon;
+Timer t;
+int x=0;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+ public AnimateJLabel()
+ {
+  createAndShowGUI();
+ }
+ 
+ private void createAndShowGUI()
+ {
+  // Set frame properties
+  setTitle("Animate JLabel");
+  setLayout(new GridBagLayout());
+  setDefaultCloseOperation(EXIT_ON_CLOSE);
+  
+  // Create an ImageIcon
+  icon=new ImageIcon(getClass().getResource("/images/animated.gif"));  
+  
+  // Create a JLabel
+  l=new JLabel("Java-Demos.blogspot.com");
+  
+  // Set the text position bottom center relative
+  // to the icon so that the icon appears as a
+  // a desktop icon
+  l.setVerticalTextPosition(SwingConstants.BOTTOM);
+  l.setHorizontalTextPosition(SwingConstants.CENTER);
+  
+  // Set the icon to the JLabel
+  l.setIcon(icon);
+  
+  // Set some font
+  l.setFont(new Font("Myriad Pro",Font.PLAIN,28));
+  
+  // Initially, the label isn't visible
+  l.setVisible(false);
+  
+  // Add the JLabel
+  add(l);
+   
+  // Create a Timer with that executes
+  // each 1ms
+  t=new Timer(1,new ActionListener(){
+  
+   public void actionPerformed(ActionEvent ae)
+   {
+    // First time, make the JLabel visible
+    // You don't need to call this again because
+    // the label is visible when this is first
+    // executed. Calling it every time the timer fires
+    // is redundant
+    if(x==0) l.setVisible(true);
+    
+    // Set the location, only the x-co ordinate gets
+    // updated (incremented by 1 each time) and the y remains
+    // constant here because getHeight() and l.getHeight() both
+    // are constant
+    l.setLocation(x++-l.getWidth()/2,getHeight()/2-l.getHeight()/2);
+    
+    // If x equals half of the width of the JFrame
+    // i.e. reaches center, then stop the timer
+//    if(x==getWidth()/2) t.stop();
+   }
+  });
+  
+  // Set some initial delay, optional
+  t.setInitialDelay(200);
+  
+  // Start the timer
+  t.start();
+  
+  // Set size and show the frame
+  setSize(500,500);
+  setVisible(true);
+  setLocationRelativeTo(null);
+ }
+ 
+ public static void main(String args[])
+ {
+  SwingUtilities.invokeLater(new Runnable(){
+   public void run()
+   {
+    new AnimateJLabel();
+   }
+  });
+ }
+}
 
-public class TestLayout {
+
+/*public class TestLayout {
 
     public static void main(String[] args) {
         new TestLayout();
@@ -103,4 +188,4 @@ public class TestLayout {
         return pane;
     }
 
-}
+}*/
