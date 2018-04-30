@@ -62,8 +62,8 @@ public class AnimatedIcon extends ImageIcon implements Runnable, ActionListener
 
 	//  Used for the implementation of ImageIcon interface
 
-	private int iconWidth = 120;
-	private int iconHeight = 120;
+	private int iconWidth = ReelIconLabel.ICON_WIDTH;
+	private int iconHeight = ReelIconLabel.ICON_HEIGHT;
 
 	//  Use to control processing
 

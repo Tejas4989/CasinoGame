@@ -1,14 +1,17 @@
 package org.poc.slotgame;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.datatransfer.Clipboard;
+import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.IOException;
@@ -65,6 +68,7 @@ public class SlotGameGUI {
 	    protected static final String IMAGE_PATH = "/images/Final_images/";
 	    private List<JLabel> matchedReelNumbers = null;
 	    private static final float RB_FONT_SIZE = 35.0f;
+	    private JLabel draggedLabel;
 	    
 	    public SlotGameGUI(int credits, int boughtCredits, int bet, double payout, double creditBuyout, int reel1, int reel2, int reel3,int reel4, int reel5, int reel6,int reel7, int reel8, int reel9) {
 	        this.credits=credits;
@@ -130,7 +134,7 @@ public class SlotGameGUI {
 	        frmFrame = new JFrame();
 	        frmFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	        frmFrame.setTitle("Welcome To Casino");
-	        frmFrame.setResizable(false);
+	        frmFrame.setResizable(true);
 	        frmFrame.setVisible(true);
 	         
 	        pnl1Reels = new JPanel();
@@ -180,15 +184,15 @@ public class SlotGameGUI {
 	    /** Adds labels to the form. */
 	    private void addFields() {
 	         
-	        lblReel1 = new ReelIconLabel(images.get(reel1));
-	        lblReel2 = new ReelIconLabel(images.get(reel2));
-	        lblReel3 = new ReelIconLabel(images.get(reel3));
-	        lblReel4 = new ReelIconLabel(images.get(reel4));
-	        lblReel5 = new ReelIconLabel(images.get(reel5));
-	        lblReel6 = new ReelIconLabel(images.get(reel6));
-	        lblReel7 = new ReelIconLabel(images.get(reel7));
-	        lblReel8 = new ReelIconLabel(images.get(reel8));
-	        lblReel9 = new ReelIconLabel(images.get(reel9));
+	        lblReel1 = new ReelIconLabel(images.get(reel1), this);
+	        lblReel2 = new ReelIconLabel(images.get(reel2), this);
+	        lblReel3 = new ReelIconLabel(images.get(reel3), this);
+	        lblReel4 = new ReelIconLabel(images.get(reel4), this);
+	        lblReel5 = new ReelIconLabel(images.get(reel5), this);
+	        lblReel6 = new ReelIconLabel(images.get(reel6), this);
+	        lblReel7 = new ReelIconLabel(images.get(reel7), this);
+	        lblReel8 = new ReelIconLabel(images.get(reel8), this);
+	        lblReel9 = new ReelIconLabel(images.get(reel9), this);
 	         
 	        sepStats = new JSeparator();
 	        lblMatchTwo = new JLabel();
@@ -229,7 +233,7 @@ public class SlotGameGUI {
 	        lblReel9.setIcon(images.get(reel9));*/
 	        
 	        //set the listener to reel labels
-	        MouseAdapter dragListener = new DragMouseAdapter();
+	      /*  DragMouseAdapter dragListener = new DragMouseAdapter();
 	        lblReel1.addMouseListener(dragListener);
 	        lblReel2.addMouseListener(dragListener);
 	        lblReel3.addMouseListener(dragListener);
@@ -249,7 +253,7 @@ public class SlotGameGUI {
 	        lblReel7.addMouseMotionListener(dragListener);
 	        lblReel8.addMouseMotionListener(dragListener);
 	        lblReel9.addMouseMotionListener(dragListener);
-	        
+*/	        
 	        /*// set the Icon transfer Hanlder
 	        lblReel1.setTransferHandler(new TransferHandler("icon"));
 	        lblReel2.setTransferHandler(new TransferHandler("icon"));
@@ -272,8 +276,8 @@ public class SlotGameGUI {
 	        btnSpin.setToolTipText("Click to spin the reels!");
 	        btnSpin.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	        btnSpin.setInheritsPopupMenu(true);
-	        btnSpin.setMaximumSize(new Dimension(200, 50));
-	        btnSpin.setMinimumSize(new Dimension(200, 50));
+	        btnSpin.setMaximumSize(btnSpin.getPreferredSize());
+	        btnSpin.setMinimumSize(btnSpin.getPreferredSize());
 	        btnSpin.addActionListener(new SpinHandler());
 	         
 	        btnCash = new JButton();
@@ -637,13 +641,13 @@ public class SlotGameGUI {
 	        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(tgglSound))
 	        .addGroup(layout.createSequentialGroup()
-	        .addComponent(rb1X, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(rb1X, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addGap(18, 18, 18)
-	        .addComponent(rb2X, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(rb2X, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addGap(18, 18, 18)
-	        .addComponent(rb3X, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(rb3X, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addGap(18, 18, 18)
-	        .addComponent(rb4X, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
+	        .addComponent(rb4X, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
 	        .addComponent(btnSpin, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(pnl1Reels, GroupLayout.Alignment.CENTER, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(pnl2Reels, GroupLayout.Alignment.CENTER, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -654,18 +658,18 @@ public class SlotGameGUI {
 	        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
 	        .addComponent(lblMatchTwo, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(lblWon, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	        .addComponent(lblMatchThree, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+	        .addComponent(lblMatchThree, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
-	        .addComponent(sepStats2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(sepStats2, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
 	        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
 	        .addComponent(lblLost, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	        .addComponent(lblCredits, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	        .addComponent(lblMoney, GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+	        .addComponent(lblMoney, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
 	        .addGap(0, 0, Short.MAX_VALUE)))
 	        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 //	        .addComponent(btnCash)
-	        .addComponent(sepStatus, GroupLayout.PREFERRED_SIZE, 426, GroupLayout.PREFERRED_SIZE)))
+	        .addComponent(sepStatus, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)))
 	        .addContainerGap())))
 	        );
 	         
@@ -683,31 +687,31 @@ public class SlotGameGUI {
 	        .addComponent(rb3X)
 	        .addComponent(rb4X))
 	        .addContainerGap(18,18)
-	        .addComponent(btnSpin, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(btnSpin, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
-	        .addComponent(sepStats, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(sepStats, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
 	        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 	        .addGroup(layout.createSequentialGroup()
-	        .addComponent(lblWon, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(lblWon, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.RELATED)
-	        .addComponent(lblMatchTwo, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(lblMatchTwo, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.RELATED)
-	        .addComponent(lblMatchThree, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+	        .addComponent(lblMatchThree, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
 	        .addComponent(sepStats2)
 	        .addGroup(layout.createSequentialGroup()
-	        .addComponent(lblLost, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(lblLost, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.RELATED)
-	        .addComponent(lblCredits, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(lblCredits, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.RELATED)
 	        .addComponent(lblMoney, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
 //	        .addComponent(btnCash, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
-	        .addComponent(sepStatus, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(sepStatus, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
-	        .addComponent(lblStatus, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(lblStatus, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.UNRELATED)
-	        .addComponent(sepCheats, GroupLayout.PREFERRED_SIZE, 5, GroupLayout.PREFERRED_SIZE)
+	        .addComponent(sepCheats, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 	        .addPreferredGap(ComponentPlacement.RELATED)
 //	        .addComponent(prgbarCheatUnlocker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 //	        .addPreferredGap(ComponentPlacement.UNRELATED)
@@ -1307,26 +1311,84 @@ public class SlotGameGUI {
 	         
 	    }
 	    /*Performs mouse event Drag and Drop */
-	private class DragMouseAdapter extends MouseAdapter {
-		Clipboard clip = new Clipboard("IconTransfer");
+	private class DragMouseAdapter implements MouseListener, MouseMotionListener{
 
+		@Override
 		public void mousePressed(MouseEvent e) {
-			System.out.println("Mouse Clicked");
-
 			JComponent c = (JComponent) e.getSource();
 			TransferHandler handler = c.getTransferHandler();
 			handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
+			frmFrame.repaint();
+			
+			/*draggedLabel = null;
+	        Component c =  frmFrame.findComponentAt(e.getX(), e.getY());
+	        if (c instanceof JLabel)
+	        	draggedLabel = (JLabel)c;*/
+//	        draggedLabel.setLocation(e.getX(), e.getY());
+	        
+	        
+	        
 		}
-
+		
+		@Override
 		public void mouseReleased(MouseEvent e) {
-			System.out.println(e.getPoint());
+			Component comp = frmFrame.findComponentAt(e.getX(), e.getY());
+			if(comp == null) {
+				comp = pnl2Reels.findComponentAt(e.getX(), e.getY());
+			}
+			if(comp == null) {
+				comp = pnl3Reels.findComponentAt(e.getX(), e.getY());
+			}
 			JComponent c = (JComponent) e.getSource();
 			TransferHandler handler = c.getTransferHandler();
 			handler.exportAsDrag(c, e, TransferHandler.COPY);
-			c.repaint();
+			if(comp instanceof JLabel) {
+				JLabel label = (JLabel)comp;
+				System.out.println(((ImageIcon)label.getIcon()).getDescription());
+				JLabel sLabel = (JLabel)c;
+				System.out.println("Source Name : " + ((ImageIcon)sLabel.getIcon()).getDescription());
+			}
+			frmFrame.validate();
+			frmFrame.repaint();
 			matchCheck();
 		}
 
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (draggedLabel == null) return;
+			frmFrame.repaint();
+
+	        //  The drag location should be within the bounds of the chess board
+//	        draggedLabel.setLocation(e.getX(), e.getY());
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	public void frameRepaint() {
+		this.frmFrame.repaint(0);
 	}
 	
 }

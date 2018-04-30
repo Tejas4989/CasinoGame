@@ -2,19 +2,17 @@ package org.poc.slotgame;
 
 import java.awt.EventQueue;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+
+import info.clearthought.layout.TableLayout;
 
 public class JTableTest extends JPanel{
 	
 	public JTableTest()
     {
-        Icon aboutIcon = new ImageIcon(getClass().getResource("/images/Gold.png"));
+/*        Icon aboutIcon = new ImageIcon(getClass().getResource("/images/Gold.png"));
         Icon addIcon = new ImageIcon(getClass().getResource("/images/Coin.png"));
         Icon copyIcon = new ImageIcon(getClass().getResource("/images/Bell.png"));
 
@@ -39,7 +37,13 @@ public class JTableTest extends JPanel{
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
 
         JScrollPane scrollPane = new JScrollPane( table );
-        add( scrollPane );
+        add( scrollPane );*/
+		JPanel panel = new JPanel(new TableLayout());
+		panel.add(new JButton("0"));
+		panel.add(new JButton("1"),"skip=1");
+		panel.add(new JButton("2"), "col=1");
+		panel.add(new JButton("3"), "rspan=2");
+		panel.add(new JButton("4"), "cspan=2");
     }
 	
 	 private static void createAndShowGUI()

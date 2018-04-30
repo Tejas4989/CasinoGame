@@ -5,17 +5,19 @@ import java.awt.Image;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DropTarget;
-import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.TransferHandler;
 
 
 
-public class ReelIconLabel extends JLabel{
+public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionListener {
 
 	/**
 	 * 
@@ -23,21 +25,27 @@ public class ReelIconLabel extends JLabel{
 	private static final long serialVersionUID = 3673161273378158979L;
 	private DropTarget dropTarget;
 	private int acceptableActions = DnDConstants.ACTION_COPY;
+	private SlotGameGUI slotGameGUI;
 //	private DTListener dtListener;
 	private DragSource dragSource;
 //	private DGListener dgListener;
 //	public DSListener dsListner;
+	public static final int ICON_WIDTH = 200;
+	public static final int ICON_HEIGHT = 200;
 	
 	public static ImageIcon getScaledImageIcon(ImageIcon icon){
 		if(icon.getDescription().startsWith("Animated"))
 			return icon;
-		return new ImageIcon(icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH), icon.getDescription());
+		return new ImageIcon(icon.getImage().getScaledInstance(ICON_WIDTH, ICON_HEIGHT, Image.SCALE_SMOOTH), icon.getDescription());
 	}
 	
-	public ReelIconLabel(ImageIcon icon) {
+	public ReelIconLabel(ImageIcon icon, SlotGameGUI slotGameGUI) {
 		// TODO Auto-generated constructor stub
 		this.setIcon(getScaledImageIcon(icon));
 		this.setTransferHandler(new TransferHandler("icon"));
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		this.slotGameGUI = slotGameGUI;
 		
 		// set the Drag source and related listeners
 		/*this.dragSource = DragSource.getDefaultDragSource();
@@ -217,6 +225,59 @@ public class ReelIconLabel extends JLabel{
 		AnimatedIcon animated = new AnimatedIcon(this , 200, 5, icons);
 		animated.start();
 		this.setIcon(animated);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		JComponent c = (JComponent) e.getSource();
+		TransferHandler handler = c.getTransferHandler();
+		handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
+		repaint();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		JComponent c = (JComponent) e.getSource();
+		TransferHandler handler = c.getTransferHandler();
+		handler.exportAsDrag(c, e, TransferHandler.COPY);
+		JLabel sLabel = (JLabel)c;
+		System.out.println("Source Name : " + ((ImageIcon)sLabel.getIcon()).getDescription());
+		this.paint(getGraphics());
+		this.slotGameGUI.frameRepaint();
+		this.slotGameGUI.matchCheck();
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
