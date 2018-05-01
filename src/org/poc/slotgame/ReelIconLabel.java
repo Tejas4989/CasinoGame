@@ -29,14 +29,14 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 //	private DTListener dtListener;
 	private DragSource dragSource;
 //	private DGListener dgListener;
-//	public DSListener dsListner;
-	public static final int ICON_WIDTH = 200;
-	public static final int ICON_HEIGHT = 200;
+//	public DSListener dsListner;SS
+	public static final int ICON_WIDTH = 425;
+	public static final int ICON_HEIGHT = 270;
 	
 	public static ImageIcon getScaledImageIcon(ImageIcon icon){
 		if(icon.getDescription().startsWith("Animated"))
 			return icon;
-		return new ImageIcon(icon.getImage().getScaledInstance(ICON_WIDTH, ICON_HEIGHT, Image.SCALE_SMOOTH), icon.getDescription());
+		return new ImageIcon(icon.getImage().getScaledInstance(ICON_WIDTH, ICON_HEIGHT, Image.SCALE_DEFAULT), icon.getDescription());
 	}
 	
 	public ReelIconLabel(ImageIcon icon, SlotGameGUI slotGameGUI) {
@@ -46,6 +46,26 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		this.slotGameGUI = slotGameGUI;
+		
+		// set the Drag source and related listeners
+		/*this.dragSource = DragSource.getDefaultDragSource();
+		this.dgListener = new DGListener();
+		this.dsListner = new DSListener();
+		// Component action listener
+		this.dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this.dgListener);
+		
+		// set the dropTarget object
+		this.dropTarget = new DropTarget(this, this.acceptableActions,this.dtListener,true);
+		this.setDragSource(dragSource);
+		this.setDropTarget(dropTarget);*/
+	}
+	
+	public ReelIconLabel(ImageIcon icon) {
+		// TODO Auto-generated constructor stub
+		this.setIcon(getScaledImageIcon(icon));
+		this.setTransferHandler(new TransferHandler("icon"));
+		addMouseListener(this);
+		addMouseMotionListener(this);
 		
 		// set the Drag source and related listeners
 		/*this.dragSource = DragSource.getDefaultDragSource();
@@ -224,7 +244,7 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 	public void setAnimatedReelIcons(ImageIcon icon, List<ImageIcon> icons){
 		AnimatedIcon animated = new AnimatedIcon(this , 200, 5, icons);
 		animated.start();
-		this.setIcon(animated);
+		this.setIcon(icon);
 	}
 
 	@Override
