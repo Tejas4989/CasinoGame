@@ -15,6 +15,7 @@ package org.poc.slotgame;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -38,6 +39,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -102,13 +104,13 @@ class Gui extends JFrame {
 		add(pnlG);
 
 		//set constraints of each panel.
-		makeConstraints(gbl, pnlA, 1, 1, 0, 0, 0.5, 5.0);
-		makeConstraints(gbl, pnlB, 2, 1, 1, 0, 2.5, 5.0);
-		makeConstraints(gbl, pnlC, 3, 1, 0, 1, 0.2, 0.2);
-		makeConstraints(gbl, pnlD, 3, 1, 0, 2, 0.2, 0.2); 
-		makeConstraints(gbl, pnlE, 1, 1, 0, 3, 0.5, 0.5);
-		makeConstraints(gbl, pnlF, 2, 1, 1, 3, 2.5, 0.5);
-		makeConstraints(gbl, pnlG, 3, 1, 0, 4, 0.3, 0.3);
+		makeConstraints(gbl, pnlA, 1, 1, 0, 0, 0.75, 4.0);
+		makeConstraints(gbl, pnlB, 2, 1, 1, 0, 2.25, 4.0);
+		makeConstraints(gbl, pnlC, 1, 1, 0, 1, 1.5, 0.2);
+		makeConstraints(gbl, pnlD, 2, 1, 1, 1, 1.5, 0.2); 
+		makeConstraints(gbl, pnlE, 1, 1, 0, 2, 0.75, 0.5);
+		makeConstraints(gbl, pnlF, 2, 1, 1, 2, 2.25, 0.5);
+		makeConstraints(gbl, pnlG, 3, 1, 0, 3, 0.3, 0.3);
 		
 		// add Icon and label in pnlA
 		addIconAndPoints(pnlA);
@@ -132,18 +134,27 @@ class Gui extends JFrame {
 	 */
 	private void addReels(BorderPanel pnlB) {
 		reelPanel = new JPanel();
-		reelPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 0, 10, Color.DARK_GRAY));
+		reelPanel.setBackground(new java.awt.Color(255, 215, 0));
+		reelPanel.setBorder(BorderFactory.createMatteBorder(12, 12, 12, 12, Color.DARK_GRAY));
         GridBagLayout gb = new GridBagLayout();
         reelPanel.setLayout(gb);
         //adding reel label to panel
         reelPanel.add(lblReel1);
+        lblReel1.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel2);
+        lblReel2.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel3);
+        lblReel3.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 0, Color.DARK_GRAY));
         reelPanel.add(lblReel4);
+        lblReel4.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel5);
+        lblReel5.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel6);
+        lblReel6.setBorder(BorderFactory.createMatteBorder(0, 0, 8, 0, Color.DARK_GRAY));
         reelPanel.add(lblReel7);
+        lblReel7.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel8);
+        lblReel8.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 8, Color.DARK_GRAY));
         reelPanel.add(lblReel9);
         
         int y = 0;
@@ -201,8 +212,8 @@ class Gui extends JFrame {
 		btnSpin.setToolTipText("Click to spin the reels!");
 		btnSpin.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		btnSpin.setInheritsPopupMenu(true);
-		btnSpin.setMaximumSize(btnSpin.getPreferredSize());
-		btnSpin.setMinimumSize(btnSpin.getPreferredSize());
+		btnSpin.setPreferredSize(new Dimension(350, 30));
+		btnSpin.setVerticalAlignment(SwingConstants.CENTER);
 		btnSpin.addActionListener(new SpinHandler());	
 		
 		pnlD.add(btnSpin);
@@ -254,7 +265,7 @@ class Gui extends JFrame {
 	        btnCash.setBackground(new Color(255, 0, 0));
 	        btnCash.setText("Buy Credits");
 	        btnCash.setToolTipText("$"+df.format(bet)+" converts to "+boughtCredits+" credits.");
-	        btnCash.setHorizontalTextPosition(SwingConstants.CENTER);
+	        btnCash.setHorizontalTextPosition(SwingConstants.LEFT);
 	        btnCash.addActionListener(new BuyCreditsHandler());
 	        
 	        pnlG.add(btnCash);
@@ -271,6 +282,7 @@ class Gui extends JFrame {
 	        tgglSound = new JToggleButton();
 	        tgglSound.setSelected(true);
 	        tgglSound.setText("Sound OFF");
+	        btnPrintReceipt.setHorizontalTextPosition(SwingConstants.RIGHT);
 	        tgglSound.addActionListener(new SoundHandler());
 	        
 	        pnlG.add(tgglSound);
@@ -367,15 +379,15 @@ class Gui extends JFrame {
 	        lblLost.setHorizontalAlignment(SwingConstants.LEFT);
 	        
 	        // Reel labels
-	        lblReel1 = new ReelIconLabel(images.get(reel1));
-	        lblReel2 = new ReelIconLabel(images.get(reel2));
-	        lblReel3 = new ReelIconLabel(images.get(reel3));
-	        lblReel4 = new ReelIconLabel(images.get(reel4));
-	        lblReel5 = new ReelIconLabel(images.get(reel5));
-	        lblReel6 = new ReelIconLabel(images.get(reel6));
-	        lblReel7 = new ReelIconLabel(images.get(reel7));
-	        lblReel8 = new ReelIconLabel(images.get(reel8));
-	        lblReel9 = new ReelIconLabel(images.get(reel9));
+	        lblReel1 = new ReelIconLabel(images.get(reel1), this);
+	        lblReel2 = new ReelIconLabel(images.get(reel2), this);
+	        lblReel3 = new ReelIconLabel(images.get(reel3), this);
+	        lblReel4 = new ReelIconLabel(images.get(reel4), this);
+	        lblReel5 = new ReelIconLabel(images.get(reel5), this);
+	        lblReel6 = new ReelIconLabel(images.get(reel6), this);
+	        lblReel7 = new ReelIconLabel(images.get(reel7), this);
+	        lblReel8 = new ReelIconLabel(images.get(reel8), this);
+	        lblReel9 = new ReelIconLabel(images.get(reel9), this);
 			
 		}
 	
@@ -385,7 +397,7 @@ class Gui extends JFrame {
 	 */
 	public void addIconAndPoints(JComponent comp){
 	        JPanel iconPanel = new JPanel();
-	        iconPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 0, 10, Color.DARK_GRAY));
+	        iconPanel.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.DARK_GRAY));
 	        GridBagLayout gb = new GridBagLayout();
 	        iconPanel.setLayout(gb);
 	        int y = 0;
@@ -471,7 +483,7 @@ class Gui extends JFrame {
 			if (funds < creditBuyout && credits < bet) {
 				lblStatus.setText("<html><a href='http://www.innovatiqtechnology.com/'>InnovatiQ</a></html>");
 			} else if ((credits - bet) >= 0) {
-//				reelPanel.setBackground(new java.awt.Color(255, 215, 0));
+				reelPanel.setBackground(new java.awt.Color(255, 215, 0));
 				genReelNumbers();
 				matchedReelNumbers = new ArrayList<JLabel>();
 				if (findRowMatches() || findColumnwMatches()) {
@@ -759,6 +771,62 @@ class Gui extends JFrame {
 	                // disable sounds
 	            }
 	        }
+	    }
+	    
+	    /** calculates prize to be awarded for win based on number of matches and cheats. */
+	    public double getPrize(double prize) {
+	        if (reel1 == reel2 && reel2 == reel3) {
+	                prize = payout; // if all are matched return the full pay out.
+	            } else if (reel1 == reel2 || reel1 == reel3 || reel2 == reel3) {
+	                prize = payout / 5; // if two are matched return 1/5th of the pay out.
+	            } else {
+	            prize = 0; // If no win return no prize.
+	        }
+	        return prize;
+	    }
+	    
+	    /** Increments matchThree by 1 and returns value. */
+	    public int matchThree() {
+	        matchThree++;
+	        return matchThree;
+	    }
+	     
+	     
+	    /** Increments lost by 1 and returns value. */
+	    public int lose() {
+	        lost++;
+	        return lost;
+	    }
+	     
+	    /** Increments win by 1, increases progress bar and returns value. */
+	    public int win() {
+	        win = matchThree + matchTwo;
+//	        prgBarCheck(); // Increments the progress bar to unlock cheat menu.
+	        return win;
+	    }
+	    
+	    /** Checks for number matches and adjusts score depending on result. */
+	    public void matchCheck() {
+	    	String[] matchedReel1DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(0).getIcon()).getDescription().split(",");
+	    	String[] matchedReel2DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(1).getIcon()).getDescription().split(",");
+	    	String[] matchedReel3DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(2).getIcon()).getDescription().split(",");
+	    	
+	    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
+	    		System.out.println("Congrates you won the jackpot of : " + (bet * Integer.parseInt(matchedReel1DescriptionAndPoint[1])));
+	    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(payout))+"!");
+	            lblMatchThree.setText("Matched Three: "+matchThree());
+	            matchedReelNumbers.get(0).setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
+	            matchedReelNumbers.get(1).setBackground(new java.awt.Color(255, 0, 0));
+	            matchedReelNumbers.get(2).setBackground(new java.awt.Color(255, 0, 0));
+	    	} else {
+	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
+	            lblLost.setText("Lost: "+lose());
+	        }
+	    	
+	    	
+	        lblCredits.setText("Credits: "+(credits -= bet)); // deduct bet amount from available credits.
+	        lblMoney.setText("Money: $"+df.format((funds += getPrize(payout)))); // If there is a win add amount to cash pot.
+	        lblWon.setText("Wins: "+win()); // increment win amount.
 	    }
 }
 

@@ -1,6 +1,7 @@
 package org.poc.slotgame;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -26,6 +27,7 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 	private DropTarget dropTarget;
 	private int acceptableActions = DnDConstants.ACTION_COPY;
 	private SlotGameGUI slotGameGUI;
+	private Gui gui;
 //	private DTListener dtListener;
 	private DragSource dragSource;
 //	private DGListener dgListener;
@@ -60,12 +62,13 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 		this.setDropTarget(dropTarget);*/
 	}
 	
-	public ReelIconLabel(ImageIcon icon) {
+	public ReelIconLabel(ImageIcon icon, Gui gui) {
 		// TODO Auto-generated constructor stub
 		this.setIcon(getScaledImageIcon(icon));
 		this.setTransferHandler(new TransferHandler("icon"));
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		this.gui = gui;
 		
 		// set the Drag source and related listeners
 		/*this.dragSource = DragSource.getDefaultDragSource();
@@ -268,6 +271,7 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("Mouse Pressed : X : " + e.getX() + " Y : " + e.getY());
 		JComponent c = (JComponent) e.getSource();
 		TransferHandler handler = c.getTransferHandler();
 		handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
@@ -277,15 +281,19 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("Mouse Released : X : " + e.getX() + " Y : " + e.getY());
 		JComponent c = (JComponent) e.getSource();
 		TransferHandler handler = c.getTransferHandler();
 		handler.exportAsDrag(c, e, TransferHandler.COPY);
 		JLabel sLabel = (JLabel)c;
 		System.out.println("Source Name : " + ((ImageIcon)sLabel.getIcon()).getDescription());
-		this.paint(getGraphics());
-		this.slotGameGUI.frameRepaint();
-		this.slotGameGUI.matchCheck();
 		
+//		this.paint(getGraphics());
+//		this.slotGameGUI.frameRepaint();
+//		this.slotGameGUI.matchCheck();
+		repaint();
+		this.gui.validate();
+		this.gui.matchCheck();
 	}
 
 	@Override
