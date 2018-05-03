@@ -271,29 +271,36 @@ public class ReelIconLabel extends JLabel implements MouseListener, MouseMotionL
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("Mouse Pressed : X : " + e.getX() + " Y : " + e.getY());
-		JComponent c = (JComponent) e.getSource();
-		TransferHandler handler = c.getTransferHandler();
-		handler.exportAsDrag(c, e, TransferHandler.COPY_OR_MOVE);
-		repaint();
+		if(!this.gui.isMatchedCheck) {
+			System.out.println("Mouse Pressed : X : " + e.getX() + " Y : " + e.getY());
+			JComponent c = (JComponent) e.getSource();
+			TransferHandler handler = c.getTransferHandler();
+			handler.exportAsDrag(c, e, TransferHandler.COPY);
+			this.gui.isMatchedCheck = true;
+			repaint(1);
+			this.gui.validate();
+			this.gui.matchCheck();
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("Mouse Released : X : " + e.getX() + " Y : " + e.getY());
-		JComponent c = (JComponent) e.getSource();
-		TransferHandler handler = c.getTransferHandler();
-		handler.exportAsDrag(c, e, TransferHandler.COPY);
-		JLabel sLabel = (JLabel)c;
-		System.out.println("Source Name : " + ((ImageIcon)sLabel.getIcon()).getDescription());
-		
-//		this.paint(getGraphics());
-//		this.slotGameGUI.frameRepaint();
-//		this.slotGameGUI.matchCheck();
-		repaint();
-		this.gui.validate();
-		this.gui.matchCheck();
+		if(!this.gui.isMatchedCheck) {
+			System.out.println("Mouse Released : X : " + e.getX() + " Y : " + e.getY());
+			JComponent c = (JComponent) e.getSource();
+			TransferHandler handler = c.getTransferHandler();
+			handler.exportAsDrag(c, e, TransferHandler.COPY);
+			JLabel sLabel = (JLabel)c;
+			System.out.println("Source Name : " + ((ImageIcon)sLabel.getIcon()).getDescription());
+			
+	//		this.paint(getGraphics());
+	//		this.slotGameGUI.frameRepaint();
+	//		this.slotGameGUI.matchCheck();
+			repaint();
+			this.gui.validate();
+			this.gui.matchCheck();
+		}
 	}
 
 	@Override

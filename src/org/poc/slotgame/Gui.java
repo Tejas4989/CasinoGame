@@ -58,7 +58,7 @@ class Gui extends JFrame {
 	private ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
 	GridBagLayout gbl = new GridBagLayout();
 	private JRadioButton rb1X, rb2X, rb3X, rb4X;
-	private int credits = 100, boughtCredits = 100, bet = 1, matchThree, matchTwo, win, lost;
+	private int credits = 100, boughtCredits = 10, bet = 1, matchThree, matchTwo, win, lost;
 	private JButton btnCash, btnSpin, btnPrintReceipt;
 	private JToggleButton tgglSound;
 	private Clip audioClip = null;
@@ -67,7 +67,9 @@ class Gui extends JFrame {
 	private ReelIconLabel lblReel1, lblReel2, lblReel3, lblReel4, lblReel5, lblReel6, lblReel7, lblReel8, lblReel9;
 	private int reel1 = 1, reel2 = 2, reel3 = 3, reel4 = 4, reel5 = 5, reel6 = 6, reel7 = 7, reel8 = 8, reel9 = 9; // starting values of the reels.
 	private JPanel reelPanel;
-	 private List<JLabel> matchedReelNumbers = null;
+	private List<JLabel> matchedReelNumbers = null;
+	public boolean isMatchedCheck = false;
+	 
 	
 	
 	Gui() {
@@ -92,6 +94,7 @@ class Gui extends JFrame {
 		BorderPanel pnlD = new BorderPanel("Spin");
 		BorderPanel pnlE = new BorderPanel("Match Won/Lose");
 		BorderPanel pnlF = new BorderPanel("Credit Calculations");
+		BorderPanel pnlH = new BorderPanel("Wining/Losing Information");
 		BorderPanel pnlG = new BorderPanel("Other Buttons");
 
 		//adding all panels to main contentPane.
@@ -101,7 +104,9 @@ class Gui extends JFrame {
 		add(pnlD);
 		add(pnlE);
 		add(pnlF);
+		add(pnlH);
 		add(pnlG);
+		
 
 		//set constraints of each panel.
 		makeConstraints(gbl, pnlA, 1, 1, 0, 0, 0.75, 4.0);
@@ -109,7 +114,8 @@ class Gui extends JFrame {
 		makeConstraints(gbl, pnlC, 1, 1, 0, 1, 1.5, 0.2);
 		makeConstraints(gbl, pnlD, 2, 1, 1, 1, 1.5, 0.2); 
 		makeConstraints(gbl, pnlE, 1, 1, 0, 2, 0.75, 0.5);
-		makeConstraints(gbl, pnlF, 2, 1, 1, 2, 2.25, 0.5);
+		makeConstraints(gbl, pnlF, 1, 1, 1, 2, 1.25, 0.5);
+		makeConstraints(gbl, pnlH, 1, 1, 2, 2, 1, 0.5);
 		makeConstraints(gbl, pnlG, 3, 1, 0, 3, 0.3, 0.3);
 		
 		// add Icon and label in pnlA
@@ -126,10 +132,20 @@ class Gui extends JFrame {
 		addCreditInformation(pnlF);
 		//add Reel Panel in pnlG
 		addOtherButtons(pnlG);
+		//add wining losing information
+		addWiningLosingInformation(pnlH);
 		
 	}
 	
 	 /**
+	  * Add Winning and losing information label
+	 * @param pnlH
+	 */
+	private void addWiningLosingInformation(BorderPanel pnlH) {
+		pnlH.add(lblStatus);
+	}
+
+	/**
 	 * @param pnlB
 	 */
 	private void addReels(BorderPanel pnlB) {
@@ -388,6 +404,12 @@ class Gui extends JFrame {
 	        lblReel7 = new ReelIconLabel(images.get(reel7), this);
 	        lblReel8 = new ReelIconLabel(images.get(reel8), this);
 	        lblReel9 = new ReelIconLabel(images.get(reel9), this);
+	        
+	        lblStatus = new JLabel();
+	        lblStatus.setBackground(new Color(255, 255, 255));
+	        lblStatus.setFont(new Font("Arial", 1, 14));
+	        lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+	        lblStatus.setText("Welcome to Casnio InnovatiQ!!! ©2018");
 			
 		}
 	
@@ -466,13 +488,13 @@ class Gui extends JFrame {
             	System.out.println("bet 1 is applied");
             }else if(rb == rb2X){
             	System.out.println("Bet 2 is applied");
-            	bet = 2;
+            	bet = 5;
             }else if(rb == rb3X){
             	System.out.println("Bet 3 is applied");
-            	bet = 3;
+            	bet = 10;
             }else {
             	System.out.println("Bet 4 is applied");
-            	bet = 4;
+            	bet = 20;
             }
         }
     }
@@ -483,11 +505,16 @@ class Gui extends JFrame {
 			if (funds < creditBuyout && credits < bet) {
 				lblStatus.setText("<html><a href='http://www.innovatiqtechnology.com/'>InnovatiQ</a></html>");
 			} else if ((credits - bet) >= 0) {
+				isMatchedCheck = false; // to enable the matchCheck
 				reelPanel.setBackground(new java.awt.Color(255, 215, 0));
 				genReelNumbers();
 				matchedReelNumbers = new ArrayList<JLabel>();
 				if (findRowMatches() || findColumnwMatches()) {
 					System.out.println("Found expected jackpot" + matchedReelNumbers);
+				}else {
+					lblStatus.setText("Sorry, you didn't match any symbols. -" + bet + " credits!");
+					lblLost.setText("Lost: " + lose());
+					lblCredits.setText("Credits: " + (credits -= bet)); // deduct bet amount from available credits.
 				}
 			} else {
 				lblStatus.setText("Bet is " + bet + " credits, purchase more with $!");
@@ -732,7 +759,16 @@ class Gui extends JFrame {
     /** Performs action when Buy Credits button is clicked. */
     class BuyCreditsHandler implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-//            buyCredits();
+        	if (funds >= creditBuyout) {
+	            funds -= creditBuyout;
+	            lblMoney.setText("Money: $"+df.format(funds));
+	            credits += boughtCredits;
+	            lblCredits.setText("Credits: "+credits);
+	            lblStatus.setText("+"+boughtCredits+" credits purchased! -$"+df.format(creditBuyout));
+	            } else {
+	            lblStatus.setText("Insufficient $ to purchase credits!");
+	        }
+	        buyCreditsCheck();
         }
     }
     
@@ -775,14 +811,7 @@ class Gui extends JFrame {
 	    
 	    /** calculates prize to be awarded for win based on number of matches and cheats. */
 	    public double getPrize(double prize) {
-	        if (reel1 == reel2 && reel2 == reel3) {
-	                prize = payout; // if all are matched return the full pay out.
-	            } else if (reel1 == reel2 || reel1 == reel3 || reel2 == reel3) {
-	                prize = payout / 5; // if two are matched return 1/5th of the pay out.
-	            } else {
-	            prize = 0; // If no win return no prize.
-	        }
-	        return prize;
+	        return prize / 10;
 	    }
 	    
 	    /** Increments matchThree by 1 and returns value. */
@@ -807,26 +836,28 @@ class Gui extends JFrame {
 	    
 	    /** Checks for number matches and adjusts score depending on result. */
 	    public void matchCheck() {
-	    	String[] matchedReel1DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(0).getIcon()).getDescription().split(",");
-	    	String[] matchedReel2DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(1).getIcon()).getDescription().split(",");
-	    	String[] matchedReel3DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(2).getIcon()).getDescription().split(",");
-	    	
-	    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
-	    		System.out.println("Congrates you won the jackpot of : " + (bet * Integer.parseInt(matchedReel1DescriptionAndPoint[1])));
-	    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(payout))+"!");
-	            lblMatchThree.setText("Matched Three: "+matchThree());
-	            matchedReelNumbers.get(0).setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
-	            matchedReelNumbers.get(1).setBackground(new java.awt.Color(255, 0, 0));
-	            matchedReelNumbers.get(2).setBackground(new java.awt.Color(255, 0, 0));
-	    	} else {
-	            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
-	            lblLost.setText("Lost: "+lose());
-	        }
-	    	
-	    	
-	        lblCredits.setText("Credits: "+(credits -= bet)); // deduct bet amount from available credits.
-	        lblMoney.setText("Money: $"+df.format((funds += getPrize(payout)))); // If there is a win add amount to cash pot.
-	        lblWon.setText("Wins: "+win()); // increment win amount.
+	    	if(!isMatchedCheck) {
+		    	String[] matchedReel1DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(0).getIcon()).getDescription().split(",");
+		    	String[] matchedReel2DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(1).getIcon()).getDescription().split(",");
+		    	String[] matchedReel3DescriptionAndPoint = ((ImageIcon)matchedReelNumbers.get(2).getIcon()).getDescription().split(",");
+		    	int matchedReelIconPoint = Integer.parseInt(matchedReel1DescriptionAndPoint[1]);
+		    	if(matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel2DescriptionAndPoint[0]) && matchedReel1DescriptionAndPoint[0].equalsIgnoreCase(matchedReel3DescriptionAndPoint[0])){
+		    		System.out.println("Congrates you won the jackpot of : " + (bet * matchedReelIconPoint));
+		    		
+		    		lblStatus.setText("You matched THREE symbols ("+matchedReel1DescriptionAndPoint[0]+")! +$"+df.format(getPrize(bet * matchedReelIconPoint))+"!");
+		            lblMatchThree.setText("Matched Three: "+matchThree());
+		            matchedReelNumbers.get(0).setBackground(new java.awt.Color(255, 0, 0)); // Highlights matched icons.
+		            matchedReelNumbers.get(1).setBackground(new java.awt.Color(255, 0, 0));
+		            matchedReelNumbers.get(2).setBackground(new java.awt.Color(255, 0, 0));
+		            lblMoney.setText("Money: $"+df.format((funds += getPrize(bet * matchedReelIconPoint)))); // If there is a win add amount to cash pot.
+		            lblWon.setText("Wins: "+win()); // increment win amount.
+		    	} else {
+		            lblStatus.setText("Sorry, you didn't match any symbols. -"+bet+" credits!");
+		            lblLost.setText("Lost: "+lose());
+		        }
+		    	isMatchedCheck = true;
+		        lblCredits.setText("Credits: "+(credits -= bet)); // deduct bet amount from available credits.
+		    }
 	    }
 }
 
